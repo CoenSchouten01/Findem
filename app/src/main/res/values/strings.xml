@@ -4,4 +4,7 @@
     <string name="find_item_button">find an item</string>
     <string name="define_itemName_textField">Type here...</string>
     <string name="define_itemImage_textField">Browse...</string>
+    <string name="define_name_button">Confirm</string>
+    <string name="pick_image_button">Confirm</string>
+    <string name="confirm_add_item_button">Add the item to your house</string>
 </resources>
