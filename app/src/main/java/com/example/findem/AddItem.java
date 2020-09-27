@@ -8,11 +8,10 @@ import android.widget.EditText;
 import java.util.ArrayList;
 
 public class AddItem extends AppCompatActivity {
-    public static ArrayList<Item> items;
 
-    public AddItem(){
-        items = new ArrayList<>();
-    }
+//    public AddItem(){
+//
+//    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -20,17 +19,17 @@ public class AddItem extends AppCompatActivity {
         setContentView(R.layout.activity_add_item);
 
         // Get the intent that started this activity
-        Intent intent = getIntent();
+//        Intent intent = getIntent();
     }
     //This function gets executed when the add_item_button gets clicked
     public void add_new_item(View view){
         //
-        EditText define_itemName_textField = (EditText) findViewById(R.id.define_itemName_textField);
+        EditText define_itemName_textField = findViewById(R.id.define_itemName_textField);
 
         //Assign values to the strings
         String name = define_itemName_textField.getText().toString();
         //construct an Item based on the name and image
         Item new_item = new Item(name);
-        items.add(new_item);
+        define_itemName_textField.setText(new_item.name + " " + "toegevoegd");
     }
 }
