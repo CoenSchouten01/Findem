@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
 
 public class FindItem extends AppCompatActivity {
+    String q = "q";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
