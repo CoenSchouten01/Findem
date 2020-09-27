@@ -30,7 +30,7 @@ public class AddItem extends AppCompatActivity {
         //Assign values to the strings
         String name = define_itemName_textField.getText().toString();
         //construct an Item based on the name and image
-        Item new_item = new Item(name);
-        items.add(new_item);
+        Item new_item_defined = new Item(name);
+        items.add(new_item_defined);
     }
 }
