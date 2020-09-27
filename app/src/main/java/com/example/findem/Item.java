@@ -8,8 +8,4 @@ public class Item {
         this.name = name;
         //this.image = image;
     }
-
-    public static void main(String[] a) {
-        new Item();
-    }
 }

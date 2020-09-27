@@ -19,7 +19,4 @@ public class MainActivity extends AppCompatActivity {
         Intent intent = new Intent(this, AddItem.class);
         startActivity(intent);
     }
-    //create an addItem object to get the items ArrayList.
-    AddItem addItem = new AddItem();
-    addItem.items;
 }
