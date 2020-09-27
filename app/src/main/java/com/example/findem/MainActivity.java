@@ -19,4 +19,10 @@ public class MainActivity extends AppCompatActivity {
         Intent intent = new Intent(this, AddItem.class);
         startActivity(intent);
     }
+    //This function navigates the user to the FindItem page when this button on the main page is clicked
+    public void navigateFindItem(View view) {
+        //Do something in response to the button
+        Intent intent = new Intent( this, FindItem.class);
+        startActivity(intent);
+    }
 }
