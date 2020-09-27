@@ -25,12 +25,12 @@ public class AddItem extends AppCompatActivity {
 
     public void add_new_item(View view){
         //
-        EditText define_itemName_textField = (EditText)  findViewById(R.id.define_itemName_textField);
+        EditText define_itemName_textField = (EditText) findViewById(R.id.define_itemName_textField);
 
         //Assign values to the strings
         String name = define_itemName_textField.getText().toString();
         //construct an Item based on the name and image
-        Item new_item_defined = new Item(name);
-        items.add(new_item_defined);
+        Item new_item = new Item(name);
+        items.add(new_item);
     }
 }
