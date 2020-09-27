@@ -22,7 +22,7 @@ public class AddItem extends AppCompatActivity {
         // Get the intent that started this activity
         Intent intent = getIntent();
     }
-
+    //This function gets executed when the add_item_button gets clicked
     public void add_new_item(View view){
         //
         EditText define_itemName_textField = (EditText) findViewById(R.id.define_itemName_textField);
