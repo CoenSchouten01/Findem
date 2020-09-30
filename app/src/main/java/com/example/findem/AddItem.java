@@ -1,19 +1,14 @@
 package com.example.findem;
 
 import androidx.appcompat.app.AppCompatActivity;
-import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.InputStreamReader;
 
 public class AddItem extends AppCompatActivity {
 
@@ -37,8 +32,10 @@ public class AddItem extends AppCompatActivity {
             fos = openFileOutput(MainActivity.FILE_NAME, MODE_APPEND);
             fos.write(item_name.getBytes());
             fos.write("\n".getBytes());
-            Toast.makeText(this, "Saved to " + getFilesDir() + "/" +
-                    MainActivity.FILE_NAME, Toast.LENGTH_LONG).show();
+            Toast.makeText(this, "Added " + item_name + " to items",
+                    Toast.LENGTH_LONG).show();
+//            Toast.makeText(this, "Saved to " + getFilesDir() + "/" +
+//                    MainActivity.FILE_NAME, Toast.LENGTH_LONG).show();
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         } catch (IOException e) {
