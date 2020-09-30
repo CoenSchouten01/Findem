@@ -24,9 +24,6 @@ public class FindItem extends AppCompatActivity {
         listView = (ListView) findViewById(R.id.list_view);
 
         ArrayList<String> list = read_from_file();
-//        list.add("Potje");
-//        list.add("Civ");
-//        list.add("?");
 
         ArrayAdapter adapter = new ArrayAdapter(this, android.R.layout.simple_list_item_1, list);
 
@@ -46,9 +43,7 @@ public class FindItem extends AppCompatActivity {
             while (text != null) {
                 output.add(text);
                 text = br.readLine();
-//                sb.append(text).append("\n");
             }
-//            output = sb.toString();
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         } catch (IOException e) {
