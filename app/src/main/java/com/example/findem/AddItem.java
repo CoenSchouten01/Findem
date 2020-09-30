@@ -8,6 +8,7 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
@@ -42,7 +43,7 @@ public class AddItem extends AppCompatActivity {
         FileOutputStream fos = null;
 
         try {
-            fos = openFileOutput(MainActivity.FILE_NAME, MODE_PRIVATE);
+            fos = openFileOutput(MainActivity.FILE_NAME, MODE_APPEND);
             fos.write(name.getBytes());
             Toast.makeText(this, "Saved to " + getFilesDir() + "/" +
                             MainActivity.FILE_NAME, Toast.LENGTH_LONG).show();
