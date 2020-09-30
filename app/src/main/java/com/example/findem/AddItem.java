@@ -14,72 +14,39 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.util.ArrayList;
 
 public class AddItem extends AppCompatActivity {
-
-//    public AddItem(){
-//
-//    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_item);
-
-        // Get the intent that started this activity
-//        Intent intent = getIntent();
     }
-    //This function gets executed when the add_item_button gets clicked
-    public void add_new_item(View view){
-        //
-        EditText define_itemName_textField = findViewById(R.id.define_itemName_textField);
-        EditText define_itemImage_textField = findViewById(R.id.define_itemImage_textField);
-//        //Assign values to the strings
-        String name = define_itemName_textField.getText().toString();
-//        //construct an Item based on the name and image
-//        Item new_item = new Item(name);
-//        define_itemName_textField.setText(new_item.name + " " + "toegevoegd");
-        FileOutputStream fos = null;
 
+    //This function gets executed when the add_item_button gets clicked
+    public void add_new_item(View view) {
+        // Make objects out of the textfields
+        EditText item_name_textField = findViewById(R.id.define_itemName_textField);
+        write_to_file(item_name_textField.getText().toString());
+    }
+
+    // Add text from define_itemName_textField to items.txt
+    public void write_to_file(String item_name) {
+        FileOutputStream fos = null;
         try {
             fos = openFileOutput(MainActivity.FILE_NAME, MODE_APPEND);
-            fos.write(name.getBytes());
+            fos.write(item_name.getBytes());
+            fos.write("\n".getBytes());
             Toast.makeText(this, "Saved to " + getFilesDir() + "/" +
-                            MainActivity.FILE_NAME, Toast.LENGTH_LONG).show();
+                    MainActivity.FILE_NAME, Toast.LENGTH_LONG).show();
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         } catch (IOException e) {
             e.printStackTrace();
         } finally {
-            if (fos != null){
+            if (fos != null) {
                 try {
                     fos.close();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
-        }
-
-        FileInputStream fis = null;
-        try {
-            fis = openFileInput(MainActivity.FILE_NAME);
-            InputStreamReader isr = new InputStreamReader(fis);
-            BufferedReader br = new BufferedReader(isr);
-            StringBuilder sb = new StringBuilder();
-            String text;
-            while ((text = br.readLine()) != null) {
-                sb.append(text).append("\n");
-            }
-            define_itemImage_textField.setText(sb.toString());
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        } finally {
-            if (fis != null) {
-                try {
-                    fis.close();
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
