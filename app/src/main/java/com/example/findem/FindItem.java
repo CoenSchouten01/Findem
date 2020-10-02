@@ -2,7 +2,11 @@ package com.example.findem;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
+import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
@@ -26,9 +30,18 @@ public class FindItem extends AppCompatActivity {
         ArrayList<String> list = read_from_file();
 
         ArrayAdapter adapter = new ArrayAdapter(this, android.R.layout.simple_list_item_1, list);
-
         listView.setAdapter(adapter);
 
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Intent intent = new Intent(FindItem.this, Finding_item.class);
+                System.out.println(listView.getItemAtPosition((int)id));
+                String itemname = listView.getItemAtPosition((int)id).toString();
+                intent.putExtra("ITEM_NAME", itemname);
+                startActivity(intent);
+            }
+        });
     }
 
     public ArrayList<String> read_from_file() {
@@ -57,7 +70,6 @@ public class FindItem extends AppCompatActivity {
                 }
             }
         }
-        System.out.println(output.toString());
         return output;
     }
 }
