@@ -35,6 +35,7 @@ public class AddItem extends AppCompatActivity {
         // Register for broadcasts when a device is discovered.
         IntentFilter filter = new IntentFilter(BluetoothDevice.ACTION_FOUND);
         registerReceiver(receiver, filter);
+
     }
 
     //This function gets executed when the add_item_button gets clicked
@@ -58,8 +59,9 @@ public class AddItem extends AppCompatActivity {
                 BluetoothDevice device = intent.getParcelableExtra(BluetoothDevice.EXTRA_DEVICE);
                 String deviceName = device.getName();
                 String deviceHardwareAddress = device.getAddress(); // MAC address
-                System.out.println("Device name: " + deviceName);
+                System.out.println("De receiver if");
             }
+            System.out.println("De receiver niet if");
         }
     };
 
