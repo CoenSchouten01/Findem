@@ -7,4 +7,5 @@
     <string name="define_name_button">Confirm</string>
     <string name="pick_image_button">Confirm</string>
     <string name="confirm_add_item_button">Add the item to your house</string>
+    <string name="delete_item_button">delete an item</string>
 </resources>
