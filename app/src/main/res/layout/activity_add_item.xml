@@ -89,7 +89,7 @@
         android:layout_marginStart="16dp"
         android:layout_marginLeft="16dp"
         android:layout_marginTop="16dp"
-        android:onClick="define_itemName"
+        android:onClick="test_bluetooth"
         android:text="@string/define_name_button"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/define_itemName_textField" />

@@ -12,12 +12,15 @@ import android.widget.TextView;
 
 import java.io.IOException;
 import java.util.Set;
+import java.util.UUID;
 
 public class Finding_item extends AppCompatActivity {
 
     String item;
     public static final int REQUEST_ENABLE_BT = 1;
     public BluetoothAdapter bt_adapter;
+    private static final String TAG = "MY_APP_DEBUG_TAG";
+    private static final UUID MY_UUID = UUID.fromString("2cf6c45d-2106-4004-b91b-17b3939969bd");
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,7 +44,7 @@ public class Finding_item extends AppCompatActivity {
             for (BluetoothDevice device : pairedDevices) {
                 String deviceName = device.getName();
                 String deviceMAC = device.getAddress();
-
+                System.out.println(deviceName + "connected");
             }
         }
     }
@@ -86,7 +89,7 @@ public class Finding_item extends AppCompatActivity {
 
             // The connection attempt succeeded. Perform work associated with
             // the connection in a separate thread.
-            manageMyConnectedSocket(mmSocket);
+           // manageMyConnectedSocket(mmSocket);
         }
 
         // Closes the client socket and causes the thread to finish.

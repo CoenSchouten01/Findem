@@ -1,6 +1,13 @@
 package com.example.findem;
 
 import androidx.appcompat.app.AppCompatActivity;
+
+import android.bluetooth.BluetoothAdapter;
+import android.bluetooth.BluetoothDevice;
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.EditText;
@@ -12,10 +19,22 @@ import java.io.IOException;
 
 public class AddItem extends AppCompatActivity {
 
+    public static final int REQUEST_ENABLE_BT = 1;
+    BluetoothAdapter bt_adapter;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_item);
+
+        bt_adapter = BluetoothAdapter.getDefaultAdapter();
+        if (!bt_adapter.isEnabled()) {
+            Intent enableBtIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
+            startActivityForResult(enableBtIntent, REQUEST_ENABLE_BT);
+        }
+        // Register for broadcasts when a device is discovered.
+        IntentFilter filter = new IntentFilter(BluetoothDevice.ACTION_FOUND);
+        registerReceiver(receiver, filter);
     }
 
     //This function gets executed when the add_item_button gets clicked
@@ -23,6 +42,32 @@ public class AddItem extends AppCompatActivity {
         // Make objects out of the textfields
         EditText item_name_textField = findViewById(R.id.define_itemName_textField);
         write_to_file(item_name_textField.getText().toString());
+    }
+
+    public void test_bluetooth(View view) {
+        boolean gelukt = bt_adapter.startDiscovery();
+        System.out.println(gelukt);
+    }
+
+    private final BroadcastReceiver receiver = new BroadcastReceiver() {
+        public void onReceive(Context context, Intent intent) {
+            String action = intent.getAction();
+            if (BluetoothDevice.ACTION_FOUND.equals(action)) {
+                // Discovery has found a device. Get the BluetoothDevice
+                // object and its info from the Intent.
+                BluetoothDevice device = intent.getParcelableExtra(BluetoothDevice.EXTRA_DEVICE);
+                String deviceName = device.getName();
+                String deviceHardwareAddress = device.getAddress(); // MAC address
+                System.out.println("Device name: " + deviceName);
+            }
+        }
+    };
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        // Don't forget to unregister the ACTION_FOUND receiver.
+        unregisterReceiver(receiver);
     }
 
     // Add text from define_itemName_textField to items.txt
