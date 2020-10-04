@@ -48,10 +48,12 @@ public class AddItem extends AppCompatActivity {
     public void test_bluetooth(View view) {
         boolean gelukt = bt_adapter.startDiscovery();
         System.out.println(gelukt);
+        System.out.println("Action found: "+ BluetoothDevice.ACTION_FOUND);
     }
 
     private final BroadcastReceiver receiver = new BroadcastReceiver() {
         public void onReceive(Context context, Intent intent) {
+
             String action = intent.getAction();
             if (BluetoothDevice.ACTION_FOUND.equals(action)) {
                 // Discovery has found a device. Get the BluetoothDevice
