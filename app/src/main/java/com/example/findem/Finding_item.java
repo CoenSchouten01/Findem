@@ -11,6 +11,9 @@ import android.util.Log;
 import android.widget.TextView;
 
 import java.io.IOException;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+import java.util.ArrayList;
 import java.util.Set;
 import java.util.UUID;
 
@@ -28,7 +31,6 @@ public class Finding_item extends AppCompatActivity {
         setContentView(R.layout.activity_finding_item);
 
         item = getIntent().getStringExtra("ITEM_NAME");
-//        System.out.println("Oncreate method of Finding_Item got item name: " + item);
 
         TextView item_name_text = findViewById(R.id.finding_item);
         item_name_text.setText(item);
@@ -40,25 +42,33 @@ public class Finding_item extends AppCompatActivity {
         }
 
         Set<BluetoothDevice> pairedDevices = bt_adapter.getBondedDevices();
+
+        ArrayList<BluetoothDevice> pairedDev = new ArrayList<>();
+
         if (pairedDevices.size() > 0) {
             for (BluetoothDevice device : pairedDevices) {
                 String deviceName = device.getName();
                 String deviceMAC = device.getAddress();
                 System.out.println(deviceName + "connected");
+                pairedDev.add(device);
             }
+            ConnectThread connectThread = new ConnectThread(pairedDev.get(0));
+            connectThread.start();
+            System.out.println("Paired devices: " + pairedDev.toString());
+
         }
     }
 
     private class ConnectThread extends Thread {
-        private final BluetoothSocket mmSocket;
+        private BluetoothSocket mmSocket;
         private final BluetoothDevice mmDevice;
 
         public ConnectThread(BluetoothDevice device) {
             // Use a temporary object that is later assigned to mmSocket
             // because mmSocket is final.
             BluetoothSocket tmp = null;
+            System.out.println("socket versie 0: " + tmp);
             mmDevice = device;
-
             try {
                 // Get a BluetoothSocket to connect with the given BluetoothDevice.
                 // MY_UUID is the app's UUID string, also used in the server code.
@@ -67,6 +77,7 @@ public class Finding_item extends AppCompatActivity {
                 Log.e(TAG, "Socket's create() method failed", e);
             }
             mmSocket = tmp;
+            System.out.println("socket versie 1:" + mmSocket);
         }
 
         public void run() {
@@ -78,25 +89,39 @@ public class Finding_item extends AppCompatActivity {
                 // until it succeeds or throws an exception.
                 mmSocket.connect();
                 // Do something for Send/Receive
+
             } catch (IOException connectException) {
                 // Unable to connect; close the socket and return.
                 try {
-                    mmSocket.close();
+                    System.out.println("Socket versie 2: " + mmSocket);
+                    //mmSocket.close();
+                    Method m = mmDevice.getClass().getMethod("createRfcommSocket",
+                            new Class[] { int.class });
+                    mmSocket = (BluetoothSocket)m.invoke(mmDevice, Integer.valueOf(1));
+                    mmSocket.connect();
+                    Log.d("ZeeTest", "++++ Connecting");
+                    System.out.println("Regel 96, run! " + connectException);
                 } catch (IOException closeException) {
                     Log.e(TAG, "Could not close the client socket", closeException);
+                } catch (NoSuchMethodException e) {
+                    e.printStackTrace();
+                } catch (IllegalAccessException e) {
+                    e.printStackTrace();
+                } catch (InvocationTargetException e) {
+                    e.printStackTrace();
                 }
-                return;
             }
 
             // The connection attempt succeeded. Perform work associated with
             // the connection in a separate thread.
-           // manageMyConnectedSocket(mmSocket);
+            // manageMyConnectedSocket(mmSocket);
         }
 
         // Closes the client socket and causes the thread to finish.
         public void cancel() {
             try {
                 mmSocket.close();
+                System.out.println("Regel 108, cancelled!");
             } catch (IOException e) {
                 Log.e(TAG, "Could not close the client socket", e);
             }

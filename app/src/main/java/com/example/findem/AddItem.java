@@ -2,6 +2,7 @@ package com.example.findem;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.Manifest;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.content.BroadcastReceiver;
@@ -46,14 +47,17 @@ public class AddItem extends AppCompatActivity {
     }
 
     public void test_bluetooth(View view) {
-        boolean gelukt = bt_adapter.startDiscovery();
-        System.out.println(gelukt);
-        System.out.println("Action found: "+ BluetoothDevice.ACTION_FOUND);
+        if (bt_adapter.isDiscovering()) {
+            bt_adapter.cancelDiscovery();
+        }
+        bt_adapter.startDiscovery();
+        IntentFilter filter = new IntentFilter(BluetoothDevice.ACTION_FOUND);
+        registerReceiver(receiver, filter);
     }
 
     private final BroadcastReceiver receiver = new BroadcastReceiver() {
+        @Override
         public void onReceive(Context context, Intent intent) {
-
             String action = intent.getAction();
             if (BluetoothDevice.ACTION_FOUND.equals(action)) {
                 // Discovery has found a device. Get the BluetoothDevice
@@ -61,9 +65,8 @@ public class AddItem extends AppCompatActivity {
                 BluetoothDevice device = intent.getParcelableExtra(BluetoothDevice.EXTRA_DEVICE);
                 String deviceName = device.getName();
                 String deviceHardwareAddress = device.getAddress(); // MAC address
-                System.out.println("De receiver if");
+                System.out.println("Found bluetooth device: " + deviceName + " " + deviceHardwareAddress);
             }
-            System.out.println("De receiver niet if");
         }
     };
 
