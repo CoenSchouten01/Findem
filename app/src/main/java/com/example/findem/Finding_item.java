@@ -77,6 +77,7 @@ public class Finding_item extends AppCompatActivity {
                 // Connect to the remote device through the socket. This call blocks
                 // until it succeeds or throws an exception.
                 mmSocket.connect();
+                // Do something for Send/Receive
             } catch (IOException connectException) {
                 // Unable to connect; close the socket and return.
                 try {
