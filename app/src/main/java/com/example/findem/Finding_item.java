@@ -55,24 +55,6 @@ public class Finding_item extends AppCompatActivity {
             startActivityForResult(enableBtIntent, REQUEST_ENABLE_BT);
         }
         start_discovery();
-
-
-
-//        pairedDevices = bt_adapter.getBondedDevices();
-//        pairedDev = new ArrayList<>();
-//        System.out.println("Paired devices: " + pairedDevices.toString());
-//
-//        if (pairedDevices.size() > 0) {
-//            for (BluetoothDevice device : pairedDevices) {
-//                String deviceName = device.getName();
-//                String deviceMAC = device.getAddress();
-//                System.out.println(deviceName + "connected");
-//                pairedDev.add(device);
-//            }
-//            ConnectThread connectThread = new ConnectThread(pairedDev.get(0));
-//            connectThread.start();
-//
-//        }
     }
 
     public void connect_the_item(View view){
@@ -143,34 +125,25 @@ public class Finding_item extends AppCompatActivity {
         public void run() {
             // Cancel discovery because it otherwise slows down the connection.
             bt_adapter.cancelDiscovery();
-
+            if(mmSocket.isConnected()){
+                return;
+            }
             try {
-                // Connect to the remote device through the socket. This call blocks
-                // until it succeeds or throws an exception.
-//                if(mmSocket.isConnected()){
+                Method m = mmDevice.getClass().getMethod("createRfcommSocket",
+                        new Class[] { int.class });
+                mmSocket = (BluetoothSocket) m.invoke(mmDevice, Integer.valueOf(1));
+//                if(mmSocket.isConnected()) {
 //                    mmSocket.close();
 //                }
                 mmSocket.connect();
-
-                // Do something for Send/Receive
-
-            } catch (IOException connectException) {
-                // Unable to connect; close the socket and return.
-                try {
-                    System.out.println("Socket versie 2: " + mmSocket);
-                    Method m = mmDevice.getClass().getMethod("createRfcommSocket",
-                            new Class[] { int.class });
-                    mmSocket = (BluetoothSocket)m.invoke(mmDevice, Integer.valueOf(1));
-                    mmSocket.connect();
-                } catch (IOException closeException) {
-                    Log.e(TAG, "Could not close the client socket regel 157", closeException);
-                } catch (NoSuchMethodException e) {
-                    e.printStackTrace();
-                } catch (IllegalAccessException e) {
-                    e.printStackTrace();
-                } catch (InvocationTargetException e) {
-                    e.printStackTrace();
-                }
+            } catch (IOException closeException) {
+                 Log.e(TAG, "hier moeten we eigenlijk niet naar kijken", closeException);
+            } catch (NoSuchMethodException e) {
+                 e.printStackTrace();
+            } catch (IllegalAccessException e) {
+                 e.printStackTrace();
+            } catch (InvocationTargetException e) {
+                 e.printStackTrace();
             }
 
             // The connection attempt succeeded. Perform work associated with
@@ -181,7 +154,9 @@ public class Finding_item extends AppCompatActivity {
         // Closes the client socket and causes the thread to finish.
         public void cancel() {
             try {
-                mmSocket.close();
+                if(mmSocket.isConnected()) {
+                    mmSocket.close();
+                }
                 System.out.println("Regel 108, cancelled!");
             } catch (IOException e) {
                 Log.e(TAG, "REgel 177", e);
