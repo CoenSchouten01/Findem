@@ -13,6 +13,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
@@ -76,8 +77,13 @@ public class Finding_item extends AppCompatActivity {
 
     public void connect_the_item(View view){
         // Make a connection with the found device
-        ConnectThread connectThread = new ConnectThread(pairedDev.get(0));
-        connectThread.start();
+        if (pairedDev.size() > 0) {
+            ConnectThread connectThread = new ConnectThread(pairedDev.get(0));
+            connectThread.start();
+        } else {
+            Toast.makeText(this, "Could not find any items",
+                    Toast.LENGTH_LONG).show();
+        }
     }
 
     public void start_discovery() {
@@ -141,9 +147,9 @@ public class Finding_item extends AppCompatActivity {
             try {
                 // Connect to the remote device through the socket. This call blocks
                 // until it succeeds or throws an exception.
-                if(mmSocket.isConnected()){
-                    mmSocket.close();
-                }
+//                if(mmSocket.isConnected()){
+//                    mmSocket.close();
+//                }
                 mmSocket.connect();
 
                 // Do something for Send/Receive
