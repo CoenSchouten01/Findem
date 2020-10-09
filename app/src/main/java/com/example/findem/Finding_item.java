@@ -71,10 +71,11 @@ public class Finding_item extends AppCompatActivity {
 //        }
     }
 
-//    public void connect_the_item(View view){
-//        ConnectThread connectThread = new ConnectThread(pairedDev.get(0));
-//        connectThread.start();
-//    }
+    public void connect_the_item(View view){
+        // Make a connection with the found device
+        ConnectThread connectThread = new ConnectThread(pairedDev.get(0));
+        connectThread.start();
+    }
 
     public void start_discovery() {
         if (bt_adapter.isDiscovering()) {
@@ -85,10 +86,6 @@ public class Finding_item extends AppCompatActivity {
         // Register for broadcasts when a device is discovered.
         IntentFilter filter = new IntentFilter(BluetoothDevice.ACTION_FOUND);
         registerReceiver(receiver, filter);
-
-        // Make a connection with the found device
-        ConnectThread connectThread = new ConnectThread(pairedDev.get(0));
-        connectThread.start();
     }
 
     private final BroadcastReceiver receiver = new BroadcastReceiver() {
