@@ -5,9 +5,13 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothSocket;
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
 import android.widget.TextView;
 
 import java.io.IOException;
@@ -24,6 +28,8 @@ public class Finding_item extends AppCompatActivity {
     public BluetoothAdapter bt_adapter;
     private static final String TAG = "MY_APP_DEBUG_TAG";
     private static final UUID MY_UUID = UUID.fromString("2cf6c45d-2106-4004-b91b-17b3939969bd");
+    private Set<BluetoothDevice> pairedDevices;
+    private ArrayList<BluetoothDevice> pairedDev;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,9 +47,13 @@ public class Finding_item extends AppCompatActivity {
             startActivityForResult(enableBtIntent, REQUEST_ENABLE_BT);
         }
 
-        Set<BluetoothDevice> pairedDevices = bt_adapter.getBondedDevices();
+        // Register for broadcasts when a device is discovered.
+        IntentFilter filter = new IntentFilter(BluetoothDevice.ACTION_FOUND);
+        registerReceiver(receiver, filter);
 
-        ArrayList<BluetoothDevice> pairedDev = new ArrayList<>();
+        pairedDevices = bt_adapter.getBondedDevices();
+
+        pairedDev = new ArrayList<>();
 
         if (pairedDevices.size() > 0) {
             for (BluetoothDevice device : pairedDevices) {
@@ -55,8 +65,38 @@ public class Finding_item extends AppCompatActivity {
             ConnectThread connectThread = new ConnectThread(pairedDev.get(0));
             connectThread.start();
             System.out.println("Paired devices: " + pairedDev.toString());
-
         }
+    }
+
+    public void test_bluetooth(View view) {
+        if (bt_adapter.isDiscovering()) {
+            bt_adapter.cancelDiscovery();
+        }
+        bt_adapter.startDiscovery();
+        IntentFilter filter = new IntentFilter(BluetoothDevice.ACTION_FOUND);
+        registerReceiver(receiver, filter);
+    }
+
+    private final BroadcastReceiver receiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            String action = intent.getAction();
+            if (BluetoothDevice.ACTION_FOUND.equals(action)) {
+                // Discovery has found a device. Get the BluetoothDevice
+                // object and its info from the Intent.
+                BluetoothDevice device = intent.getParcelableExtra(BluetoothDevice.EXTRA_DEVICE);
+                String deviceName = device.getName();
+                String deviceHardwareAddress = device.getAddress(); // MAC address
+                System.out.println("Found bluetooth device: " + deviceName + " " + deviceHardwareAddress);
+            }
+        }
+    };
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        // Don't forget to unregister the ACTION_FOUND receiver.
+        unregisterReceiver(receiver);
     }
 
     private class ConnectThread extends Thread {
