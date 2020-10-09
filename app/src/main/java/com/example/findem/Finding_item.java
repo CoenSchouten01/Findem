@@ -42,6 +42,9 @@ public class Finding_item extends AppCompatActivity {
         item_name_text.setText(item);
 
         bt_adapter = BluetoothAdapter.getDefaultAdapter();
+        pairedDevices = bt_adapter.getBondedDevices();
+        pairedDev = new ArrayList<>();
+        pairedDev.addAll(pairedDevices);
     }
 
     public void find_the_item(View view){
@@ -97,7 +100,7 @@ public class Finding_item extends AppCompatActivity {
                 // object and its info from the Intent.
                 BluetoothDevice device = intent.getParcelableExtra(BluetoothDevice.EXTRA_DEVICE);
                 pairedDev.add(device);
-                pairedDevices.add(device);
+                //pairedDevices.add(device);
                 String deviceName = device.getName();
                 String deviceHardwareAddress = device.getAddress(); // MAC address
                 System.out.println("Found bluetooth device: " + deviceName + " " + deviceHardwareAddress);
@@ -138,22 +141,23 @@ public class Finding_item extends AppCompatActivity {
             try {
                 // Connect to the remote device through the socket. This call blocks
                 // until it succeeds or throws an exception.
+                if(mmSocket.isConnected()){
+                    mmSocket.close();
+                }
                 mmSocket.connect();
+
                 // Do something for Send/Receive
 
             } catch (IOException connectException) {
                 // Unable to connect; close the socket and return.
                 try {
                     System.out.println("Socket versie 2: " + mmSocket);
-                    //mmSocket.close();
                     Method m = mmDevice.getClass().getMethod("createRfcommSocket",
                             new Class[] { int.class });
                     mmSocket = (BluetoothSocket)m.invoke(mmDevice, Integer.valueOf(1));
                     mmSocket.connect();
-                    Log.d("ZeeTest", "++++ Connecting");
-                    System.out.println("Regel 96, run! " + connectException);
                 } catch (IOException closeException) {
-                    Log.e(TAG, "Could not close the client socket", closeException);
+                    Log.e(TAG, "Could not close the client socket regel 157", closeException);
                 } catch (NoSuchMethodException e) {
                     e.printStackTrace();
                 } catch (IllegalAccessException e) {
@@ -174,7 +178,7 @@ public class Finding_item extends AppCompatActivity {
                 mmSocket.close();
                 System.out.println("Regel 108, cancelled!");
             } catch (IOException e) {
-                Log.e(TAG, "Could not close the client socket", e);
+                Log.e(TAG, "REgel 177", e);
             }
         }
     }
