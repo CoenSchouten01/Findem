@@ -71,10 +71,10 @@ public class Finding_item extends AppCompatActivity {
 //        }
     }
 
-    public void connect_the_item(View view){
-        ConnectThread connectThread = new ConnectThread(pairedDev.get(0));
-        connectThread.start();
-    }
+//    public void connect_the_item(View view){
+//        ConnectThread connectThread = new ConnectThread(pairedDev.get(0));
+//        connectThread.start();
+//    }
 
     public void start_discovery() {
         if (bt_adapter.isDiscovering()) {
@@ -85,6 +85,10 @@ public class Finding_item extends AppCompatActivity {
         // Register for broadcasts when a device is discovered.
         IntentFilter filter = new IntentFilter(BluetoothDevice.ACTION_FOUND);
         registerReceiver(receiver, filter);
+
+        // Make a connection with the found device
+        ConnectThread connectThread = new ConnectThread(pairedDev.get(0));
+        connectThread.start();
     }
 
     private final BroadcastReceiver receiver = new BroadcastReceiver() {
@@ -96,6 +100,7 @@ public class Finding_item extends AppCompatActivity {
                 // object and its info from the Intent.
                 BluetoothDevice device = intent.getParcelableExtra(BluetoothDevice.EXTRA_DEVICE);
                 pairedDev.add(device);
+                pairedDevices.add(device);
                 String deviceName = device.getName();
                 String deviceHardwareAddress = device.getAddress(); // MAC address
                 System.out.println("Found bluetooth device: " + deviceName + " " + deviceHardwareAddress);
