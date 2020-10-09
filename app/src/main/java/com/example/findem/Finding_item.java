@@ -29,7 +29,7 @@ public class Finding_item extends AppCompatActivity {
     private static final String TAG = "MY_APP_DEBUG_TAG";
     private static final UUID MY_UUID = UUID.fromString("2cf6c45d-2106-4004-b91b-17b3939969bd");
     private Set<BluetoothDevice> pairedDevices;
-    private ArrayList<BluetoothDevice> pairedDev;
+    private ArrayList<BluetoothDevice> pairedDev = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,37 +42,47 @@ public class Finding_item extends AppCompatActivity {
         item_name_text.setText(item);
 
         bt_adapter = BluetoothAdapter.getDefaultAdapter();
+    }
+
+    public void find_the_item(View view){
+        //enable bluetooth if it is not yet enabled on the device
         if (!bt_adapter.isEnabled()) {
             Intent enableBtIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
             startActivityForResult(enableBtIntent, REQUEST_ENABLE_BT);
         }
+        start_discovery();
 
-        // Register for broadcasts when a device is discovered.
-        IntentFilter filter = new IntentFilter(BluetoothDevice.ACTION_FOUND);
-        registerReceiver(receiver, filter);
 
-        pairedDevices = bt_adapter.getBondedDevices();
 
-        pairedDev = new ArrayList<>();
-
-        if (pairedDevices.size() > 0) {
-            for (BluetoothDevice device : pairedDevices) {
-                String deviceName = device.getName();
-                String deviceMAC = device.getAddress();
-                System.out.println(deviceName + "connected");
-                pairedDev.add(device);
-            }
-            ConnectThread connectThread = new ConnectThread(pairedDev.get(0));
-            connectThread.start();
-            System.out.println("Paired devices: " + pairedDev.toString());
-        }
+//        pairedDevices = bt_adapter.getBondedDevices();
+//        pairedDev = new ArrayList<>();
+//        System.out.println("Paired devices: " + pairedDevices.toString());
+//
+//        if (pairedDevices.size() > 0) {
+//            for (BluetoothDevice device : pairedDevices) {
+//                String deviceName = device.getName();
+//                String deviceMAC = device.getAddress();
+//                System.out.println(deviceName + "connected");
+//                pairedDev.add(device);
+//            }
+//            ConnectThread connectThread = new ConnectThread(pairedDev.get(0));
+//            connectThread.start();
+//
+//        }
     }
 
-    public void test_bluetooth(View view) {
+    public void connect_the_item(View view){
+        ConnectThread connectThread = new ConnectThread(pairedDev.get(0));
+        connectThread.start();
+    }
+
+    public void start_discovery() {
         if (bt_adapter.isDiscovering()) {
             bt_adapter.cancelDiscovery();
         }
         bt_adapter.startDiscovery();
+
+        // Register for broadcasts when a device is discovered.
         IntentFilter filter = new IntentFilter(BluetoothDevice.ACTION_FOUND);
         registerReceiver(receiver, filter);
     }
@@ -85,6 +95,7 @@ public class Finding_item extends AppCompatActivity {
                 // Discovery has found a device. Get the BluetoothDevice
                 // object and its info from the Intent.
                 BluetoothDevice device = intent.getParcelableExtra(BluetoothDevice.EXTRA_DEVICE);
+                pairedDev.add(device);
                 String deviceName = device.getName();
                 String deviceHardwareAddress = device.getAddress(); // MAC address
                 System.out.println("Found bluetooth device: " + deviceName + " " + deviceHardwareAddress);
@@ -106,17 +117,15 @@ public class Finding_item extends AppCompatActivity {
         public ConnectThread(BluetoothDevice device) {
             // Use a temporary object that is later assigned to mmSocket
             // because mmSocket is final.
-            BluetoothSocket tmp = null;
-            System.out.println("socket versie 0: " + tmp);
+            mmSocket = null;
             mmDevice = device;
             try {
                 // Get a BluetoothSocket to connect with the given BluetoothDevice.
                 // MY_UUID is the app's UUID string, also used in the server code.
-                tmp = device.createRfcommSocketToServiceRecord(MY_UUID);
+                mmSocket = device.createRfcommSocketToServiceRecord(MY_UUID);
             } catch (IOException e) {
                 Log.e(TAG, "Socket's create() method failed", e);
             }
-            mmSocket = tmp;
             System.out.println("socket versie 1:" + mmSocket);
         }
 

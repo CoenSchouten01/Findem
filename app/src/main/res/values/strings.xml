@@ -8,4 +8,6 @@
     <string name="pick_image_button">Confirm</string>
     <string name="confirm_add_item_button">Add the item to your house</string>
     <string name="delete_item_button">delete an item</string>
+    <string name="finding_button">Find the item</string>
+    <string name="connect_item_button">Connect the item</string>
 </resources>
