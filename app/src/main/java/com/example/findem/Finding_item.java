@@ -35,7 +35,7 @@ public class Finding_item extends AppCompatActivity {
     private static final UUID MY_UUID = UUID.fromString("2cf6c45d-2106-4004-b91b-17b3939969bd");
     private Set<BluetoothDevice> pairedDevices;
     private ArrayList<BluetoothDevice> pairedDev = new ArrayList<>();
-
+    private String address;
     private Handler handler; // handler that gets info from Bluetooth service
 
     // Defines several constants used when transmitting messages between the
@@ -62,6 +62,7 @@ public class Finding_item extends AppCompatActivity {
         pairedDevices = bt_adapter.getBondedDevices();
         pairedDev = new ArrayList<>();
         pairedDev.addAll(pairedDevices);
+        //address = iets met een file geklooi ding achtig iets ongeveer genoegelijke namiddag;
     }
 
     public void find_the_item(View view){
@@ -76,8 +77,12 @@ public class Finding_item extends AppCompatActivity {
     public void connect_the_item(View view){
         // Make a connection with the found device
         if (pairedDev.size() > 0) {
-            ConnectThread connectThread = new ConnectThread(pairedDev.get(0));
-            connectThread.start();
+            for(BluetoothDevice device : pairedDev) {
+                if(device.getAddress() == address) {
+                    ConnectThread connectThread = new ConnectThread(device);
+                    connectThread.start();
+                }
+            }
         } else {
             Toast.makeText(this, "Could not find any items",
                     Toast.LENGTH_LONG).show();
@@ -197,13 +202,9 @@ public class Finding_item extends AppCompatActivity {
             // member streams are final.
             try {
                 tmpIn = socket.getInputStream();
-            } catch (IOException e) {
-                Log.e(TAG, "Error occurred when creating input stream", e);
-            }
-            try {
                 tmpOut = socket.getOutputStream();
             } catch (IOException e) {
-                Log.e(TAG, "Error occurred when creating output stream", e);
+                Log.e(TAG, "Error occurred when creating input stream", e);
             }
 
             mmInStream = tmpIn;

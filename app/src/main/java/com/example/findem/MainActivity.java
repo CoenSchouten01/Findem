@@ -15,6 +15,7 @@ import java.io.IOException;
 public class MainActivity extends AppCompatActivity {
     public BluetoothAdapter bt_adapter;
     public static final String FILE_NAME = "items.txt";
+    public static final String FILE_NAME_ADDRESS = "bluetooth_address.txt";
     public static final int REQUEST_ENABLE_BT = 1;
 
     @Override
