@@ -87,8 +87,6 @@ public class AddItem extends AppCompatActivity {
             fos.write("\n".getBytes());
             Toast.makeText(this, "Added " + item_name + " to items",
                     Toast.LENGTH_LONG).show();
-//            Toast.makeText(this, "Saved to " + getFilesDir() + "/" +
-//                    MainActivity.FILE_NAME, Toast.LENGTH_LONG).show();
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         } catch (IOException e) {
