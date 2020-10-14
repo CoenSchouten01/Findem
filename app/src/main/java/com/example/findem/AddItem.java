@@ -38,13 +38,15 @@ public class AddItem extends AppCompatActivity {
         setContentView(R.layout.activity_add_item);
 
         bt_adapter = BluetoothAdapter.getDefaultAdapter();
+        //check if bluetooth is enabled on the device, if not, ask to enable it
         if (!bt_adapter.isEnabled()) {
             Intent enableBtIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
             startActivityForResult(enableBtIntent, REQUEST_ENABLE_BT);
         }
-            // Register for broadcasts when a device is discovered.
+        // Register for broadcasts when a device is discovered.
         IntentFilter filter = new IntentFilter(BluetoothDevice.ACTION_FOUND);
         registerReceiver(receiver, filter);
+
 
     }
 
@@ -56,10 +58,13 @@ public class AddItem extends AppCompatActivity {
         // Read info from text to corresponding files
         String item_name = item_name_textField.getText().toString();
         String MAC = MACAdress_textField.getText().toString();
-
+        //if the item name and the mac address aren't empty, execute this code block
         if(item_name.length() != 0 && MAC.length() != 0) {
+            //write name and address to file
             write_to_file(item_name, MainActivity.FILE_NAME);
             write_to_file(MAC, MainActivity.FILE_NAME_ADDRESS);
+            address = MAC;
+            //initial pairing to the tracker
             connect_the_item(view);
         } else {
             //Give some error message
@@ -69,11 +74,13 @@ public class AddItem extends AppCompatActivity {
     }
 
     public void connect_the_item(View view){
-        // Make a connection with the found device
+        //discover nearby bluetooth devices
         if (bt_adapter.isDiscovering()) {
             bt_adapter.cancelDiscovery();
         }
         bt_adapter.startDiscovery();
+        // Make a connection with the found device
+
         ConnectThread connectThread = new ConnectThread(btdevice);
         connectThread.start();
 //        if (pairedDev.size() > 0) {

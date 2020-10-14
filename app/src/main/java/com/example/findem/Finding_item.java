@@ -45,8 +45,6 @@ public class Finding_item extends AppCompatActivity {
         public static final int MESSAGE_READ = 0;
         public static final int MESSAGE_WRITE = 1;
         public static final int MESSAGE_TOAST = 2;
-
-        // ... (Add other message types here as needed.)
     }
 
     @Override
@@ -62,7 +60,7 @@ public class Finding_item extends AppCompatActivity {
         System.out.println("The received address is: " + address);
 
         TextView item_name_text = findViewById(R.id.finding_item);
-        item_name_text.setText(item);
+        item_name_text.setText(item + " " + address);
 
         bt_adapter = BluetoothAdapter.getDefaultAdapter();
         if (!bt_adapter.isEnabled()) {
@@ -94,13 +92,13 @@ public class Finding_item extends AppCompatActivity {
         }
         bt_adapter.startDiscovery();
         if (pairedDev.size() > 0) {
-            Toast.makeText(this, "Found item: " + pairedDev.get(0).getAddress(),
-                    Toast.LENGTH_LONG).show();
             for(BluetoothDevice device : pairedDev) {
-                if(device.getAddress() == address) {
+                if(device.getAddress().equals(address)) {
                     ConnectThread connectThread = new ConnectThread(device);
                     connectThread.start();
+                    System.out.println("Thread is gestart");
                 }
+                System.out.println("er zit een device in");
             }
         } else {
             Toast.makeText(this, "Could not find any items",

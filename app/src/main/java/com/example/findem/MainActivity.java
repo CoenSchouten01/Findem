@@ -24,9 +24,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         bt_adapter = BluetoothAdapter.getDefaultAdapter();
-        if (bt_adapter == null) {
-            // Do something
-        }
+        //check if bluetooth is enabled, if not, ask the user to enable it
         if (!bt_adapter.isEnabled()) {
             Intent enableBtIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
             startActivityForResult(enableBtIntent, REQUEST_ENABLE_BT);
@@ -38,19 +36,19 @@ public class MainActivity extends AppCompatActivity {
 
     //This function navigates the user to the AddItem page when this button on the main page is clicked
     public void navigateAddItem(View view) {
-        //Do something in response to the button
+        //start the activity that corresponds to the button being clicked
         Intent intent = new Intent(this, AddItem.class);
         startActivity(intent);
     }
     //This function navigates the user to the FindItem page when this button on the main page is clicked
     public void navigateFindItem(View view) {
-        //Do something in response to the button
+        //start the activity that corresponds to the button being clicked
         Intent intent = new Intent( this, FindItem.class);
         startActivity(intent);
     }
     //This function navigates the user to the Finding_item page when this button on the main page is clicked
     public void navigateDeleteItem(View view) {
-        //Do something in response to the button
+        //start the activity that corresponds to the button being clicked
         Intent intent = new Intent( this, DeleteItem.class);
         startActivity(intent);
     }

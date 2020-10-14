@@ -27,12 +27,14 @@ public class FindItem extends AppCompatActivity {
         setContentView(R.layout.activity_find_item);
         listView = (ListView) findViewById(R.id.list_view);
 
+        //read the names and the addresses from the files so we can use them in the UI
         ArrayList<String> items_list = read_from_file(MainActivity.FILE_NAME);
         final ArrayList<String> addresses_list = read_from_file(MainActivity.FILE_NAME_ADDRESS);
 
         ArrayAdapter adapter = new ArrayAdapter(this, android.R.layout.simple_list_item_1, items_list);
         listView.setAdapter(adapter);
 
+        //make sure something happens when we click items in the list
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -45,7 +47,7 @@ public class FindItem extends AppCompatActivity {
             }
         });
     }
-
+    //this function reads data from the file with filename as name
     private ArrayList<String> read_from_file(String filename) {
         FileInputStream fis = null;
         ArrayList<String> output = new ArrayList<>();
@@ -73,32 +75,4 @@ public class FindItem extends AppCompatActivity {
         }
         return output;
     }
-
-//    public ArrayList<String> read_items_from_file() {
-//        FileInputStream fis = null;
-//        ArrayList<String> output = new ArrayList<>();
-//        try {
-//            fis = openFileInput(MainActivity.FILE_NAME);
-//            InputStreamReader isr = new InputStreamReader(fis);
-//            BufferedReader br = new BufferedReader(isr);
-//            String text = br.readLine();
-//            while (text != null) {
-//                output.add(text);
-//                text = br.readLine();
-//            }
-//        } catch (FileNotFoundException e) {
-//            e.printStackTrace();
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//        } finally {
-//            if (fis != null) {
-//                try {
-//                    fis.close();
-//                } catch (IOException e) {
-//                    e.printStackTrace();
-//                }
-//            }
-//        }
-//        return output;
-//    }
 }
