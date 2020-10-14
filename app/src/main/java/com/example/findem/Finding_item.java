@@ -28,14 +28,14 @@ import java.util.UUID;
 
 public class Finding_item extends AppCompatActivity {
 
-    String item;
+    private String item;
+    private String address;
     public static final int REQUEST_ENABLE_BT = 1;
     public BluetoothAdapter bt_adapter;
     private static final String TAG = "MY_APP_DEBUG_TAG";
     private static final UUID MY_UUID = UUID.fromString("2cf6c45d-2106-4004-b91b-17b3939969bd");
     private Set<BluetoothDevice> pairedDevices;
     private ArrayList<BluetoothDevice> pairedDev = new ArrayList<>();
-    private String address;
     private Handler handler; // handler that gets info from Bluetooth service
 
     // Defines several constants used when transmitting messages between the
@@ -54,6 +54,9 @@ public class Finding_item extends AppCompatActivity {
         setContentView(R.layout.activity_finding_item);
 
         item = getIntent().getStringExtra("ITEM_NAME");
+        address = getIntent().getStringExtra("MAC_ADDRESS");
+
+        System.out.println("The received address is: " + address);
 
         TextView item_name_text = findViewById(R.id.finding_item);
         item_name_text.setText(item);
@@ -62,7 +65,10 @@ public class Finding_item extends AppCompatActivity {
         pairedDevices = bt_adapter.getBondedDevices();
         pairedDev = new ArrayList<>();
         pairedDev.addAll(pairedDevices);
-        //address = iets met een file geklooi ding achtig iets ongeveer genoegelijke namiddag;
+
+        // Register for broadcasts when a device is discovered.
+        IntentFilter filter = new IntentFilter(BluetoothDevice.ACTION_FOUND);
+        registerReceiver(receiver, filter);
     }
 
     public void find_the_item(View view){
@@ -94,10 +100,6 @@ public class Finding_item extends AppCompatActivity {
             bt_adapter.cancelDiscovery();
         }
         bt_adapter.startDiscovery();
-
-        // Register for broadcasts when a device is discovered.
-        IntentFilter filter = new IntentFilter(BluetoothDevice.ACTION_FOUND);
-        registerReceiver(receiver, filter);
     }
 
     private final BroadcastReceiver receiver = new BroadcastReceiver() {
@@ -156,6 +158,7 @@ public class Finding_item extends AppCompatActivity {
                 mmSocket.connect();
             } catch (IOException closeException) {
                  Log.e(TAG, "hier moeten we eigenlijk niet naar kijken", closeException);
+
             } catch (NoSuchMethodException e) {
                  e.printStackTrace();
             } catch (IllegalAccessException e) {

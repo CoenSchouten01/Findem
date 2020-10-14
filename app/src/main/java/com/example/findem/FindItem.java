@@ -27,9 +27,10 @@ public class FindItem extends AppCompatActivity {
         setContentView(R.layout.activity_find_item);
         listView = (ListView) findViewById(R.id.list_view);
 
-        ArrayList<String> list = read_from_file();
+        ArrayList<String> items_list = read_items_from_file();
+        final ArrayList<String> addresses_list = read_addresses_from_file();
 
-        ArrayAdapter adapter = new ArrayAdapter(this, android.R.layout.simple_list_item_1, list);
+        ArrayAdapter adapter = new ArrayAdapter(this, android.R.layout.simple_list_item_1, items_list);
         listView.setAdapter(adapter);
 
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -37,13 +38,43 @@ public class FindItem extends AppCompatActivity {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Intent intent = new Intent(FindItem.this, Finding_item.class);
                 String itemname = listView.getItemAtPosition((int)id).toString();
+                String address = addresses_list.get((int)id);
                 intent.putExtra("ITEM_NAME", itemname);
+                intent.putExtra("MAC_ADDRESS", address);
                 startActivity(intent);
             }
         });
     }
 
-    public ArrayList<String> read_from_file() {
+    private ArrayList<String> read_addresses_from_file() {
+        FileInputStream fis = null;
+        ArrayList<String> output = new ArrayList<>();
+        try {
+            fis = openFileInput(MainActivity.FILE_NAME_ADDRESS);
+            InputStreamReader isr = new InputStreamReader(fis);
+            BufferedReader br = new BufferedReader(isr);
+            String text = br.readLine();
+            while (text != null) {
+                output.add(text);
+                text = br.readLine();
+            }
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        } finally {
+            if (fis != null) {
+                try {
+                    fis.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+        return output;
+    }
+
+    public ArrayList<String> read_items_from_file() {
         FileInputStream fis = null;
         ArrayList<String> output = new ArrayList<>();
         try {

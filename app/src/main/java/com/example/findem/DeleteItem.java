@@ -22,7 +22,8 @@ import java.util.ArrayList;
 public class DeleteItem extends AppCompatActivity {
 
     ListView listView;
-    ArrayList<String> list;
+    ArrayList<String> items_list;
+    ArrayList<String> addresses_list;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -30,9 +31,10 @@ public class DeleteItem extends AppCompatActivity {
         setContentView(R.layout.activity_delete_item);
         listView = (ListView) findViewById(R.id.list_view);
 
-        list = read_from_file();
+        items_list = read_from_file(MainActivity.FILE_NAME);
+        addresses_list = read_from_file(MainActivity.FILE_NAME_ADDRESS);
 
-        ArrayAdapter adapter = new ArrayAdapter(this, android.R.layout.simple_list_item_1, list);
+        ArrayAdapter adapter = new ArrayAdapter(this, android.R.layout.simple_list_item_1, items_list);
         listView.setAdapter(adapter);
 
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -47,24 +49,27 @@ public class DeleteItem extends AppCompatActivity {
     }
 
     public void delete_item(int id) {
-        
         File dir = getFilesDir();
-        File file = new File(dir, MainActivity.FILE_NAME);
-        file.delete();
+        File item_file = new File(dir, MainActivity.FILE_NAME);
+        File address_file = new File(dir, MainActivity.FILE_NAME_ADDRESS);
+        item_file.delete();
+        address_file.delete();
 
-        list.remove(id);
+        items_list.remove(id);
+        addresses_list.remove(id);
 
-        write_to_file(list);
+        write_to_file(items_list, MainActivity.FILE_NAME);
+        write_to_file(addresses_list, MainActivity.FILE_NAME_ADDRESS);
 
         Intent intent = new Intent(this, DeleteItem.class);
         startActivity(intent);
     }
 
-    public ArrayList<String> read_from_file() {
+    public ArrayList<String> read_from_file(String filename) {
         FileInputStream fis = null;
         ArrayList<String> output = new ArrayList<>();
         try {
-            fis = openFileInput(MainActivity.FILE_NAME);
+            fis = openFileInput(filename);
             InputStreamReader isr = new InputStreamReader(fis);
             BufferedReader br = new BufferedReader(isr);
             String text = br.readLine();
@@ -88,10 +93,10 @@ public class DeleteItem extends AppCompatActivity {
         return output;
     }
 
-    public void write_to_file(ArrayList<String> list) {
+    public void write_to_file(ArrayList<String> list, String filename) {
         FileOutputStream fos = null;
         try {
-            fos = openFileOutput(MainActivity.FILE_NAME, MODE_APPEND);
+            fos = openFileOutput(filename, MODE_APPEND);
             for (String item_name : list) {
                 fos.write(item_name.getBytes());
                 fos.write("\n".getBytes());

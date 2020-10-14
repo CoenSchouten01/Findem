@@ -51,9 +51,15 @@ public class AddItem extends AppCompatActivity {
         // Make objects out of the textfields
         EditText item_name_textField = findViewById(R.id.define_itemName_textField);
         EditText MACAdress_textField = findViewById(R.id.define_MACAdress_textField);
+        // Read info from text to corresponding files
         write_name_to_file(item_name_textField.getText().toString());
         write_address_to_file(MACAdress_textField.getText().toString());
         test_bluetooth(view);
+
+
+        // write code to pair devices
+
+
     }
 
     public void test_bluetooth(View view) {
