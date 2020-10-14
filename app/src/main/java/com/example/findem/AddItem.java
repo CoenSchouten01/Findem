@@ -52,12 +52,23 @@ public class AddItem extends AppCompatActivity {
         EditText item_name_textField = findViewById(R.id.define_itemName_textField);
         EditText MACAdress_textField = findViewById(R.id.define_MACAdress_textField);
         // Read info from text to corresponding files
-        write_name_to_file(item_name_textField.getText().toString());
-        write_address_to_file(MACAdress_textField.getText().toString());
-        test_bluetooth(view);
+        String item_name = item_name_textField.getText().toString();
+        String MAC = MACAdress_textField.getText().toString();
+
+        if(item_name.length() != 0 && MAC.length() != 0) {
+            write_name_to_file(item_name);
+            write_address_to_file(MAC);
+            //test_bluetooth(view);
 
 
-        // write code to pair devices
+            // write code to pair devices
+        } else {
+            //Give some error message
+            Toast.makeText(this, "Illegal item name or MAC address.",
+                    Toast.LENGTH_LONG).show();
+        }
+
+
 
 
     }

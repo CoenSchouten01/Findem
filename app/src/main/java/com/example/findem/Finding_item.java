@@ -53,6 +53,8 @@ public class Finding_item extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_finding_item);
 
+
+
         item = getIntent().getStringExtra("ITEM_NAME");
         address = getIntent().getStringExtra("MAC_ADDRESS");
 
@@ -62,6 +64,10 @@ public class Finding_item extends AppCompatActivity {
         item_name_text.setText(item);
 
         bt_adapter = BluetoothAdapter.getDefaultAdapter();
+        if (!bt_adapter.isEnabled()) {
+            Intent enableBtIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
+            startActivityForResult(enableBtIntent, REQUEST_ENABLE_BT);
+        }
         pairedDevices = bt_adapter.getBondedDevices();
         pairedDev = new ArrayList<>();
         pairedDev.addAll(pairedDevices);
@@ -71,18 +77,21 @@ public class Finding_item extends AppCompatActivity {
         registerReceiver(receiver, filter);
     }
 
-    public void find_the_item(View view){
-        //enable bluetooth if it is not yet enabled on the device
-        if (!bt_adapter.isEnabled()) {
-            Intent enableBtIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
-            startActivityForResult(enableBtIntent, REQUEST_ENABLE_BT);
-        }
-        start_discovery();
-    }
+//    public void find_the_item(View view){
+//        //enable bluetooth if it is not yet enabled on the device
+//        if (!bt_adapter.isEnabled()) {
+//            Intent enableBtIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
+//            startActivityForResult(enableBtIntent, REQUEST_ENABLE_BT);
+//        }
+//        start_discovery();
+//    }
 
     public void connect_the_item(View view){
         // Make a connection with the found device
+        start_discovery();
         if (pairedDev.size() > 0) {
+            Toast.makeText(this, "Found item: " + pairedDev.get(0).getAddress(),
+                    Toast.LENGTH_LONG).show();
             for(BluetoothDevice device : pairedDev) {
                 if(device.getAddress() == address) {
                     ConnectThread connectThread = new ConnectThread(device);
@@ -93,6 +102,11 @@ public class Finding_item extends AppCompatActivity {
             Toast.makeText(this, "Could not find any items",
                     Toast.LENGTH_LONG).show();
         }
+    }
+
+    public void found_the_item(View view){
+        //print 0 to tracer
+        kill_tracer(mmSocket);
     }
 
     public void start_discovery() {
@@ -123,7 +137,11 @@ public class Finding_item extends AppCompatActivity {
     protected void onDestroy() {
         super.onDestroy();
         // Don't forget to unregister the ACTION_FOUND receiver.
-        unregisterReceiver(receiver);
+        try {
+            unregisterReceiver(receiver);
+        } catch(IllegalArgumentException e){
+            e.printStackTrace();
+        }
     }
 
     private class ConnectThread extends Thread {
@@ -169,7 +187,7 @@ public class Finding_item extends AppCompatActivity {
 
             // The connection attempt succeeded. Perform work associated with
             // the connection in a separate thread.
-            manage_connected_socket(mmSocket);
+            activate_tracer(mmSocket);
         }
 
         // Closes the client socket and causes the thread to finish.
@@ -185,9 +203,23 @@ public class Finding_item extends AppCompatActivity {
         }
     }
 
-    public void manage_connected_socket(BluetoothSocket mmSocket){
+    public void activate_tracer(BluetoothSocket mmSocket){
         ConnectedThread connectedThread = new ConnectedThread(mmSocket);
         connectedThread.start();
+        try {
+            mmSocket.getOutputStream().write("1".toString().getBytes());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+    public void kill_tracer(BluetoothSocket mmSocket){
+        ConnectedThread connectedThread = new ConnectedThread(mmSocket);
+        connectedThread.start();
+        try {
+            mmSocket.getOutputStream().write("0".toString().getBytes());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     public class ConnectedThread extends Thread {

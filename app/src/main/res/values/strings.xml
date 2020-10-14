@@ -11,4 +11,5 @@
     <string name="finding_button">Find the item</string>
     <string name="connect_item_button">Connect the item</string>
     <string name="define_MACAdress_textField">Enter the MAC address here...</string>
+    <string name="found_item_button">Found the item</string>
 </resources>
