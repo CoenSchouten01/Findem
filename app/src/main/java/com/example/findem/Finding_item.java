@@ -37,6 +37,7 @@ public class Finding_item extends AppCompatActivity {
     private Set<BluetoothDevice> pairedDevices;
     private ArrayList<BluetoothDevice> pairedDev = new ArrayList<>();
     private Handler handler; // handler that gets info from Bluetooth service
+    private ConnectedThread connectedThread = null;
 
     // Defines several constants used when transmitting messages between the
     // service and the UI.
@@ -88,7 +89,10 @@ public class Finding_item extends AppCompatActivity {
 
     public void connect_the_item(View view){
         // Make a connection with the found device
-        start_discovery();
+        if (bt_adapter.isDiscovering()) {
+            bt_adapter.cancelDiscovery();
+        }
+        bt_adapter.startDiscovery();
         if (pairedDev.size() > 0) {
             Toast.makeText(this, "Found item: " + pairedDev.get(0).getAddress(),
                     Toast.LENGTH_LONG).show();
@@ -106,14 +110,17 @@ public class Finding_item extends AppCompatActivity {
 
     public void found_the_item(View view){
         //print 0 to tracer
-        kill_tracer(mmSocket);
-    }
-
-    public void start_discovery() {
-        if (bt_adapter.isDiscovering()) {
-            bt_adapter.cancelDiscovery();
+        if (connectedThread != null) {
+            if (connectedThread.isAlive()) {
+                connectedThread.kill_tracer();
+            } else {
+                Toast.makeText(this, "Tracer is not yet activated!",
+                        Toast.LENGTH_LONG).show();
+            }
+        } else {
+            Toast.makeText(this, "Tracer is not yet activated!",
+                    Toast.LENGTH_LONG).show();
         }
-        bt_adapter.startDiscovery();
     }
 
     private final BroadcastReceiver receiver = new BroadcastReceiver() {
@@ -187,7 +194,7 @@ public class Finding_item extends AppCompatActivity {
 
             // The connection attempt succeeded. Perform work associated with
             // the connection in a separate thread.
-            activate_tracer(mmSocket);
+            start_tracer(mmSocket);
         }
 
         // Closes the client socket and causes the thread to finish.
@@ -203,23 +210,10 @@ public class Finding_item extends AppCompatActivity {
         }
     }
 
-    public void activate_tracer(BluetoothSocket mmSocket){
-        ConnectedThread connectedThread = new ConnectedThread(mmSocket);
+    public void start_tracer(BluetoothSocket mmSocket){
+        connectedThread = new ConnectedThread(mmSocket);
         connectedThread.start();
-        try {
-            mmSocket.getOutputStream().write("1".toString().getBytes());
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-    public void kill_tracer(BluetoothSocket mmSocket){
-        ConnectedThread connectedThread = new ConnectedThread(mmSocket);
-        connectedThread.start();
-        try {
-            mmSocket.getOutputStream().write("0".toString().getBytes());
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        connectedThread.activate_tracer();
     }
 
     public class ConnectedThread extends Thread {
@@ -268,27 +262,43 @@ public class Finding_item extends AppCompatActivity {
         }
 
         // Call this from the main activity to send data to the remote device.
-        public void write(byte[] bytes) {
+        public void activate_tracer(){
             try {
-                mmOutStream.write(bytes);
-
-                // Share the sent message with the UI activity.
-                Message writtenMsg = handler.obtainMessage(
-                        Finding_item.MessageConstants.MESSAGE_WRITE, -1, -1, mmBuffer);
-                writtenMsg.sendToTarget();
+                mmSocket.getOutputStream().write("1".toString().getBytes());
             } catch (IOException e) {
-                Log.e(TAG, "Error occurred when sending data", e);
-
-                // Send a failure message back to the activity.
-                Message writeErrorMsg =
-                        handler.obtainMessage(Finding_item.MessageConstants.MESSAGE_TOAST);
-                Bundle bundle = new Bundle();
-                bundle.putString("toast",
-                        "Couldn't send data to the other device");
-                writeErrorMsg.setData(bundle);
-                handler.sendMessage(writeErrorMsg);
+                e.printStackTrace();
             }
         }
+
+        public void kill_tracer(){
+            try {
+                mmSocket.getOutputStream().write("0".toString().getBytes());
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+
+//        public void write(byte[] bytes) {
+//            try {
+//                mmOutStream.write(bytes);
+//
+//                // Share the sent message with the UI activity.
+//                Message writtenMsg = handler.obtainMessage(
+//                        Finding_item.MessageConstants.MESSAGE_WRITE, -1, -1, mmBuffer);
+//                writtenMsg.sendToTarget();
+//            } catch (IOException e) {
+//                Log.e(TAG, "Error occurred when sending data", e);
+//
+//                // Send a failure message back to the activity.
+//                Message writeErrorMsg =
+//                        handler.obtainMessage(Finding_item.MessageConstants.MESSAGE_TOAST);
+//                Bundle bundle = new Bundle();
+//                bundle.putString("toast",
+//                        "Couldn't send data to the other device");
+//                writeErrorMsg.setData(bundle);
+//                handler.sendMessage(writeErrorMsg);
+//            }
+//        }
 
         // Call this method from the main activity to shut down the connection.
         public void cancel() {

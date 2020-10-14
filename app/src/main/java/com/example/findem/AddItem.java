@@ -29,6 +29,8 @@ public class AddItem extends AppCompatActivity {
     BluetoothAdapter bt_adapter;
     private static final String TAG = "MY_APP_DEBUG_TAG";
     private static final UUID MY_UUID = UUID.fromString("2cf6c45d-2106-4004-b91b-17b3939969bd");
+    private BluetoothDevice btdevice;
+    private String address;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -56,31 +58,47 @@ public class AddItem extends AppCompatActivity {
         String MAC = MACAdress_textField.getText().toString();
 
         if(item_name.length() != 0 && MAC.length() != 0) {
-            write_name_to_file(item_name);
-            write_address_to_file(MAC);
-            //test_bluetooth(view);
-
-
-            // write code to pair devices
+            write_to_file(item_name, MainActivity.FILE_NAME);
+            write_to_file(MAC, MainActivity.FILE_NAME_ADDRESS);
+            connect_the_item(view);
         } else {
             //Give some error message
             Toast.makeText(this, "Illegal item name or MAC address.",
                     Toast.LENGTH_LONG).show();
         }
-
-
-
-
     }
 
-    public void test_bluetooth(View view) {
+    public void connect_the_item(View view){
+        // Make a connection with the found device
         if (bt_adapter.isDiscovering()) {
             bt_adapter.cancelDiscovery();
         }
         bt_adapter.startDiscovery();
-        IntentFilter filter = new IntentFilter(BluetoothDevice.ACTION_FOUND);
-        registerReceiver(receiver, filter);
+        ConnectThread connectThread = new ConnectThread(btdevice);
+        connectThread.start();
+//        if (pairedDev.size() > 0) {
+//            Toast.makeText(this, "Found item: " + pairedDev.get(0).getAddress(),
+//                    Toast.LENGTH_LONG).show();
+//            for(BluetoothDevice device : pairedDev) {
+//                if(device.getAddress() == address) {
+//                    Finding_item.ConnectThread connectThread = new Finding_item.ConnectThread(device);
+//                    connectThread.start();
+//                }
+//            }
+//        } else {
+//            Toast.makeText(this, "Could not find any items",
+//                    Toast.LENGTH_LONG).show();
+//        }
     }
+
+//    public void test_bluetooth(View view) {
+//        if (bt_adapter.isDiscovering()) {
+//            bt_adapter.cancelDiscovery();
+//        }
+//        bt_adapter.startDiscovery();
+//        IntentFilter filter = new IntentFilter(BluetoothDevice.ACTION_FOUND);
+//        registerReceiver(receiver, filter);
+//    }
 
     private final BroadcastReceiver receiver = new BroadcastReceiver() {
         @Override
@@ -93,6 +111,9 @@ public class AddItem extends AppCompatActivity {
                 String deviceName = device.getName();
                 String deviceHardwareAddress = device.getAddress(); // MAC address
                 System.out.println("Found bluetooth device: " + deviceName + " " + deviceHardwareAddress);
+                if (deviceHardwareAddress.equals(address)) {
+                    btdevice = device;
+                }
             }
         }
     };
@@ -101,14 +122,18 @@ public class AddItem extends AppCompatActivity {
     protected void onDestroy() {
         super.onDestroy();
         // Don't forget to unregister the ACTION_FOUND receiver.
-        unregisterReceiver(receiver);
+        try {
+            unregisterReceiver(receiver);
+        } catch(IllegalArgumentException e){
+            e.printStackTrace();
+        }
     }
 
     // Add text from define_itemName_textField to items.txt
-    public void write_name_to_file(String item_name) {
+    public void write_to_file(String item_name, String filename) {
         FileOutputStream fos = null;
         try {
-            fos = openFileOutput(MainActivity.FILE_NAME, MODE_APPEND);
+            fos = openFileOutput(filename, MODE_APPEND);
             fos.write(item_name.getBytes());
             fos.write("\n".getBytes());
             Toast.makeText(this, "Added " + item_name + " to items",
@@ -128,26 +153,26 @@ public class AddItem extends AppCompatActivity {
         }
     }
 
-    public void write_address_to_file(String address){
-        FileOutputStream fos = null;
-        try {
-            fos = openFileOutput(MainActivity.FILE_NAME_ADDRESS, MODE_APPEND);
-            fos.write(address.getBytes());
-            fos.write("\n".getBytes());
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        } finally {
-            if (fos != null) {
-                try {
-                    fos.close();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
-        }
-    }
+//    public void write_address_to_file(String address){
+//        FileOutputStream fos = null;
+//        try {
+//            fos = openFileOutput(MainActivity.FILE_NAME_ADDRESS, MODE_APPEND);
+//            fos.write(address.getBytes());
+//            fos.write("\n".getBytes());
+//        } catch (FileNotFoundException e) {
+//            e.printStackTrace();
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        } finally {
+//            if (fos != null) {
+//                try {
+//                    fos.close();
+//                } catch (IOException e) {
+//                    e.printStackTrace();
+//                }
+//            }
+//        }
+//    }
 
     private class ConnectThread extends Thread {
         private BluetoothSocket mmSocket;
