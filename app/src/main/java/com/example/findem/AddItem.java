@@ -21,6 +21,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.util.ArrayList;
 import java.util.UUID;
 
 public class AddItem extends AppCompatActivity {
@@ -31,6 +32,7 @@ public class AddItem extends AppCompatActivity {
     private static final UUID MY_UUID = UUID.fromString("2cf6c45d-2106-4004-b91b-17b3939969bd");
     private BluetoothDevice btdevice;
     private String address;
+    private ArrayList<BluetoothDevice> pairedDev = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -64,8 +66,15 @@ public class AddItem extends AppCompatActivity {
             write_to_file(item_name, MainActivity.FILE_NAME);
             write_to_file(MAC, MainActivity.FILE_NAME_ADDRESS);
             address = MAC;
+            for(BluetoothDevice device : pairedDev){
+                if(address.equals(device.getAddress())){
+                    //btdevice = device;
+                    connect_the_item(device);
+                    break;
+                }
+            }
             //initial pairing to the tracker
-            connect_the_item(view);
+
         } else {
             //Give some error message
             Toast.makeText(this, "Illegal item name or MAC address.",
@@ -73,15 +82,15 @@ public class AddItem extends AppCompatActivity {
         }
     }
 
-    public void connect_the_item(View view){
-        //discover nearby bluetooth devices
-        if (bt_adapter.isDiscovering()) {
-            bt_adapter.cancelDiscovery();
-        }
-        bt_adapter.startDiscovery();
+    public void connect_the_item(BluetoothDevice device){
+//        //discover nearby bluetooth devices
+//        if (bt_adapter.isDiscovering()) {
+//            bt_adapter.cancelDiscovery();
+//        }
+//        bt_adapter.startDiscovery();
         // Make a connection with the found device
 
-        ConnectThread connectThread = new ConnectThread(btdevice);
+        ConnectThread connectThread = new ConnectThread(device);
         connectThread.start();
 //        if (pairedDev.size() > 0) {
 //            Toast.makeText(this, "Found item: " + pairedDev.get(0).getAddress(),
@@ -98,14 +107,16 @@ public class AddItem extends AppCompatActivity {
 //        }
     }
 
-//    public void test_bluetooth(View view) {
-//        if (bt_adapter.isDiscovering()) {
-//            bt_adapter.cancelDiscovery();
-//        }
-//        bt_adapter.startDiscovery();
-//        IntentFilter filter = new IntentFilter(BluetoothDevice.ACTION_FOUND);
-//        registerReceiver(receiver, filter);
-//    }
+
+
+    public void discover_devices(View view) {
+        if (bt_adapter.isDiscovering()) {
+            bt_adapter.cancelDiscovery();
+        }
+        bt_adapter.startDiscovery();
+        IntentFilter filter = new IntentFilter(BluetoothDevice.ACTION_FOUND);
+        registerReceiver(receiver, filter);
+   }
 
     private final BroadcastReceiver receiver = new BroadcastReceiver() {
         @Override
@@ -118,9 +129,10 @@ public class AddItem extends AppCompatActivity {
                 String deviceName = device.getName();
                 String deviceHardwareAddress = device.getAddress(); // MAC address
                 System.out.println("Found bluetooth device: " + deviceName + " " + deviceHardwareAddress);
-                if (deviceHardwareAddress.equals(address)) {
-                    btdevice = device;
-                }
+//                if (deviceHardwareAddress.equals(address)) {
+//                    btdevice = device;
+//                }
+                pairedDev.add(device);
             }
         }
     };
