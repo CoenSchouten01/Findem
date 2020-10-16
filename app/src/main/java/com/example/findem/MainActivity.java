@@ -53,4 +53,10 @@ public class MainActivity extends AppCompatActivity {
         Intent intent = new Intent( this, DeleteItem.class);
         startActivity(intent);
     }
+    //This function navigates the user to the FAQ page when this button on the main page is clicked
+    public void navigateFAQ(View view) {
+        //start the activity that corresponds to the button being clicked
+        Intent intent = new Intent( this, FAQ.class);
+        startActivity(intent);
+    }
 }

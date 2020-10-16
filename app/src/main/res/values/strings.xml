@@ -15,4 +15,5 @@
     <string name="discovery_button">Look for nearby bluetooth devices</string>
     <string name="image_button">Take a picture</string>
     <string name="image_item">Item of the image</string>
+    <string name="faq_button">FAQ</string>
 </resources>
