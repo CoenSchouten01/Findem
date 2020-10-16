@@ -180,15 +180,18 @@ public class AddItem extends AppCompatActivity {
         if (bt_adapter.isDiscovering()) {
             bt_adapter.cancelDiscovery();
         }
+        System.out.println("starting discovery");
         bt_adapter.startDiscovery();
         IntentFilter filter = new IntentFilter(BluetoothDevice.ACTION_FOUND);
         registerReceiver(receiver, filter);
+        System.out.println("started discovery");
    }
 
     private final BroadcastReceiver receiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
             String action = intent.getAction();
+            System.out.println("start with getting info");
             if (BluetoothDevice.ACTION_FOUND.equals(action)) {
                 // Discovery has found a device. Get the BluetoothDevice
                 // object and its info from the Intent.
