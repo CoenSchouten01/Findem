@@ -30,6 +30,7 @@ public class FindItem extends AppCompatActivity {
         //read the names and the addresses from the files so we can use them in the UI
         ArrayList<String> items_list = read_from_file(MainActivity.FILE_NAME);
         final ArrayList<String> addresses_list = read_from_file(MainActivity.FILE_NAME_ADDRESS);
+        final ArrayList<String> photopaths = read_from_file(MainActivity.FILE_NAME_IMAGE);
 
         ArrayAdapter adapter = new ArrayAdapter(this, android.R.layout.simple_list_item_1, items_list);
         listView.setAdapter(adapter);
@@ -41,8 +42,10 @@ public class FindItem extends AppCompatActivity {
                 Intent intent = new Intent(FindItem.this, Finding_item.class);
                 String itemname = listView.getItemAtPosition((int)id).toString();
                 String address = addresses_list.get((int)id);
+                String photopath = photopaths.get((int)id);
                 intent.putExtra("ITEM_NAME", itemname);
                 intent.putExtra("MAC_ADDRESS", address);
+                intent.putExtra("PHOTOPATH", photopath);
                 startActivity(intent);
             }
         });

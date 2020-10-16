@@ -42,7 +42,7 @@ public class AddItem extends AppCompatActivity {
     private BluetoothDevice btdevice;
     private String address;
     private ArrayList<BluetoothDevice> pairedDev = new ArrayList<>();
-    private String currentPhotoPath;
+    private String currentPhotoPath = " ";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -75,6 +75,11 @@ public class AddItem extends AppCompatActivity {
             //write name and address to file
             write_to_file(item_name, MainActivity.FILE_NAME);
             write_to_file(MAC, MainActivity.FILE_NAME_ADDRESS);
+            if(!currentPhotoPath.equals(" ")){
+                write_to_file(currentPhotoPath, MainActivity.FILE_NAME_IMAGE);
+            } else {
+                write_to_file("....", MainActivity.FILE_NAME_IMAGE);
+            }
             address = MAC;
             for(BluetoothDevice device : pairedDev){
                 if(address.equals(device.getAddress())){

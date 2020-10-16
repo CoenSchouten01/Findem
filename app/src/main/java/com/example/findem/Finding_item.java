@@ -9,11 +9,14 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.util.Log;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -30,6 +33,7 @@ public class Finding_item extends AppCompatActivity {
 
     private String item;
     private String address;
+    private String photopath;
     public static final int REQUEST_ENABLE_BT = 1;
     public BluetoothAdapter bt_adapter;
     private static final String TAG = "MY_APP_DEBUG_TAG";
@@ -52,15 +56,21 @@ public class Finding_item extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_finding_item);
 
-
-
         item = getIntent().getStringExtra("ITEM_NAME");
         address = getIntent().getStringExtra("MAC_ADDRESS");
+        photopath = getIntent().getStringExtra("PHOTOPATH");
 
         System.out.println("The received address is: " + address);
 
         TextView item_name_text = findViewById(R.id.finding_item);
         item_name_text.setText(item + " " + address);
+
+        ImageView imageView = findViewById(R.id.imageView);
+        System.out.println("Photopath pre if: " + photopath);
+        if(!photopath.equals("....")) {
+            System.out.println("Photopath: " + photopath);
+            setPic(imageView, photopath);
+        }
 
         bt_adapter = BluetoothAdapter.getDefaultAdapter();
         if (!bt_adapter.isEnabled()) {
@@ -104,6 +114,32 @@ public class Finding_item extends AppCompatActivity {
             Toast.makeText(this, "Could not find any items",
                     Toast.LENGTH_LONG).show();
         }
+    }
+
+    private void setPic(ImageView imageView, String currentPhotoPath) {
+//        // Get the dimensions of the View
+//        int targetW = imageView.getWidth();
+//        int targetH = imageView.getHeight();
+//
+//        // Get the dimensions of the bitmap
+//        BitmapFactory.Options bmOptions = new BitmapFactory.Options();
+//        bmOptions.inJustDecodeBounds = true;
+//
+//        BitmapFactory.decodeFile(currentPhotoPath, bmOptions);
+//
+//        int photoW = bmOptions.outWidth;
+//        int photoH = bmOptions.outHeight;
+//
+//        // Determine how much to scale down the image
+//        int scaleFactor = Math.max(1, Math.min(photoW/targetW, photoH/targetH));
+//
+//        // Decode the image file into a Bitmap sized to fill the View
+//        bmOptions.inJustDecodeBounds = false;
+//        bmOptions.inSampleSize = scaleFactor;
+//        bmOptions.inPurgeable = true;
+
+        Bitmap bitmap = BitmapFactory.decodeFile(currentPhotoPath); //bmOptions);
+        imageView.setImageBitmap(bitmap);
     }
 
     public void found_the_item(View view){
