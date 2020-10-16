@@ -121,8 +121,8 @@ public class Finding_item extends AppCompatActivity {
 
     private void setPic(ImageView imageView, String currentPhotoPath) {
         // Get the dimensions of the View
-        int targetW = imageView.getWidth();
-        int targetH = imageView.getHeight();
+        int targetW = imageView.getMaxWidth();
+        int targetH = imageView.getMaxHeight();
 
         System.out.println("targetW: " + targetW + " TargetH: " + targetH);
 
@@ -146,7 +146,7 @@ public class Finding_item extends AppCompatActivity {
         Matrix matrix = new Matrix();
         matrix.postRotate(90);
 
-        Bitmap bitmap = BitmapFactory.decodeFile(currentPhotoPath); //bmOptions);
+        Bitmap bitmap = BitmapFactory.decodeFile(currentPhotoPath, bmOptions);
         bitmap = Bitmap.createBitmap(bitmap, 0, 0, bitmap.getWidth(), bitmap.getHeight(), matrix, true);
         imageView.setImageBitmap(bitmap);
     }
