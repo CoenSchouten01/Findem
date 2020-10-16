@@ -13,4 +13,5 @@
     <string name="define_MACAdress_textField">Enter the MAC address here...</string>
     <string name="found_item_button">Found the item</string>
     <string name="discovery_button">Look for nearby bluetooth devices</string>
+    <string name="image_button">Take a picture</string>
 </resources>

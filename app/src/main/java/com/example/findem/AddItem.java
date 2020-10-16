@@ -6,11 +6,13 @@ import android.Manifest;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothSocket;
+import android.content.ActivityNotFoundException;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
@@ -27,6 +29,7 @@ import java.util.UUID;
 public class AddItem extends AppCompatActivity {
 
     public static final int REQUEST_ENABLE_BT = 1;
+    static final int REQUEST_IMAGE_CAPTURE = 2;
     BluetoothAdapter bt_adapter;
     private static final String TAG = "MY_APP_DEBUG_TAG";
     private static final UUID MY_UUID = UUID.fromString("2cf6c45d-2106-4004-b91b-17b3939969bd");
@@ -82,6 +85,15 @@ public class AddItem extends AppCompatActivity {
         }
     }
 
+    public void take_picture(View view) {
+        Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+        try {
+            startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE);
+        } catch (ActivityNotFoundException e) {
+            // display error state to the user
+        }
+    }
+
     public void connect_the_item(BluetoothDevice device){
 //        //discover nearby bluetooth devices
 //        if (bt_adapter.isDiscovering()) {
@@ -106,8 +118,6 @@ public class AddItem extends AppCompatActivity {
 //                    Toast.LENGTH_LONG).show();
 //        }
     }
-
-
 
     public void discover_devices(View view) {
         if (bt_adapter.isDiscovering()) {
