@@ -14,4 +14,5 @@
     <string name="found_item_button">Found the item</string>
     <string name="discovery_button">Look for nearby bluetooth devices</string>
     <string name="image_button">Take a picture</string>
+    <string name="image_item">Item of the image</string>
 </resources>

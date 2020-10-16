@@ -11,6 +11,7 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Matrix;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -65,7 +66,7 @@ public class Finding_item extends AppCompatActivity {
         TextView item_name_text = findViewById(R.id.finding_item);
         item_name_text.setText(item + " " + address);
 
-        ImageView imageView = findViewById(R.id.imageView);
+        ImageView imageView = findViewById(R.id.Piet);
         System.out.println("Photopath pre if: " + photopath);
         if(!photopath.equals("....")) {
             System.out.println("Photopath: " + photopath);
@@ -120,6 +121,8 @@ public class Finding_item extends AppCompatActivity {
 //        // Get the dimensions of the View
 //        int targetW = imageView.getWidth();
 //        int targetH = imageView.getHeight();
+////
+//        System.out.println("targetW: " + targetW + " TargetH: " + targetH);
 //
 //        // Get the dimensions of the bitmap
 //        BitmapFactory.Options bmOptions = new BitmapFactory.Options();
@@ -138,7 +141,11 @@ public class Finding_item extends AppCompatActivity {
 //        bmOptions.inSampleSize = scaleFactor;
 //        bmOptions.inPurgeable = true;
 
+        Matrix matrix = new Matrix();
+        matrix.postRotate(90);
+
         Bitmap bitmap = BitmapFactory.decodeFile(currentPhotoPath); //bmOptions);
+        bitmap = Bitmap.createBitmap(bitmap, 0, 0, bitmap.getWidth(), bitmap.getHeight(), matrix, true);
         imageView.setImageBitmap(bitmap);
     }
 
