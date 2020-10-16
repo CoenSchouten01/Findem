@@ -35,7 +35,7 @@ import java.util.UUID;
 public class AddItem extends AppCompatActivity {
 
     public static final int REQUEST_ENABLE_BT = 1;
-    static final int REQUEST_IMAGE_CAPTURE = 2;
+    public static final int REQUEST_IMAGE_CAPTURE = 2;
     BluetoothAdapter bt_adapter;
     private static final String TAG = "MY_APP_DEBUG_TAG";
     private static final UUID MY_UUID = UUID.fromString("2cf6c45d-2106-4004-b91b-17b3939969bd");
