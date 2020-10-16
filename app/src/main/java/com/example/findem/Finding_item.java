@@ -12,6 +12,7 @@ import android.content.IntentFilter;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Matrix;
+import android.media.ExifInterface;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -70,7 +71,11 @@ public class Finding_item extends AppCompatActivity {
         System.out.println("Photopath pre if: " + photopath);
         if(!photopath.equals("....")) {
             System.out.println("Photopath: " + photopath);
-            setPic(imageView, photopath);
+            try {
+                setPic(imageView, photopath);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
         System.out.println("Imageview W: " + imageView.getMaxWidth());
         System.out.println("Imageview H: " + imageView.getMaxHeight());
@@ -119,7 +124,7 @@ public class Finding_item extends AppCompatActivity {
         }
     }
 
-    private void setPic(ImageView imageView, String currentPhotoPath) {
+    private void setPic(ImageView imageView, String currentPhotoPath) throws IOException {
         // Get the dimensions of the View
         int targetW = imageView.getMaxWidth();
         int targetH = imageView.getMaxHeight();
@@ -143,11 +148,33 @@ public class Finding_item extends AppCompatActivity {
         bmOptions.inSampleSize = scaleFactor;
         bmOptions.inPurgeable = true;
 
-        Matrix matrix = new Matrix();
-        matrix.postRotate(90);
 
-        Bitmap bitmap = BitmapFactory.decodeFile(currentPhotoPath, bmOptions);
-        bitmap = Bitmap.createBitmap(bitmap, 0, 0, bitmap.getWidth(), bitmap.getHeight(), matrix, true);
+
+        BitmapFactory.Options bounds = new BitmapFactory.Options();
+        bounds.inJustDecodeBounds = true;
+        BitmapFactory.decodeFile(currentPhotoPath, bounds);
+
+        BitmapFactory.Options opts = new BitmapFactory.Options();
+        Bitmap bitmap = BitmapFactory.decodeFile(currentPhotoPath, opts);
+        ExifInterface exif = new ExifInterface(currentPhotoPath);
+        String orientString = exif.getAttribute(ExifInterface.TAG_ORIENTATION);
+        int orientation = orientString != null ? Integer.parseInt(orientString) :  ExifInterface.ORIENTATION_NORMAL;
+
+        int rotationAngle = 0;
+        if (orientation == ExifInterface.ORIENTATION_ROTATE_90) rotationAngle = 90;
+        if (orientation == ExifInterface.ORIENTATION_ROTATE_180) rotationAngle = 180;
+        if (orientation == ExifInterface.ORIENTATION_ROTATE_270) rotationAngle = 270;
+
+        Matrix matrix = new Matrix();
+        matrix.setRotate(rotationAngle, (float) bitmap.getWidth() / 2, (float) bitmap.getHeight() / 2);
+        bitmap = Bitmap.createBitmap(bitmap, 0, 0, bounds.outWidth, bounds.outHeight, matrix, true);
+
+
+
+
+
+//        Bitmap bitmap = BitmapFactory.decodeFile(currentPhotoPath, bmOptions);
+//        bitmap = Bitmap.createBitmap(bitmap, 0, 0, bitmap.getWidth(), bitmap.getHeight(), matrix, true);
         imageView.setImageBitmap(bitmap);
     }
 
