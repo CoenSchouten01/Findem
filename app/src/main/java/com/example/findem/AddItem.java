@@ -118,6 +118,8 @@ public class AddItem extends AppCompatActivity {
                 startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE);
                 galleryAddPic();
                 System.out.println("Added to gallery");
+                Toast.makeText(this, "Saved image",
+                    Toast.LENGTH_LONG).show();
             }
         }
 //        try {
