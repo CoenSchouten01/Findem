@@ -125,7 +125,6 @@ public class Finding_item extends AppCompatActivity {
     }
 
     private void setPic(ImageView imageView, String currentPhotoPath) throws IOException {
-        // Get the dimensions of the View
         int targetW = imageView.getMaxWidth();
         int targetH = imageView.getMaxHeight();
 
@@ -133,7 +132,7 @@ public class Finding_item extends AppCompatActivity {
         BitmapFactory.Options bmOptions = new BitmapFactory.Options();
         bmOptions.inJustDecodeBounds = true;
 
-        Bitmap bitmap = BitmapFactory.decodeFile(currentPhotoPath, bmOptions);
+        BitmapFactory.decodeFile(currentPhotoPath, bmOptions);
 
         int photoW = bmOptions.outWidth;
         int photoH = bmOptions.outHeight;
@@ -146,6 +145,14 @@ public class Finding_item extends AppCompatActivity {
         bmOptions.inSampleSize = scaleFactor;
         bmOptions.inPurgeable = true;
 
+
+
+        BitmapFactory.Options bounds = new BitmapFactory.Options();
+        bounds.inJustDecodeBounds = true;
+        BitmapFactory.decodeFile(currentPhotoPath, bounds);
+
+        BitmapFactory.Options opts = new BitmapFactory.Options();
+        Bitmap bitmap = BitmapFactory.decodeFile(currentPhotoPath, opts);
         ExifInterface exif = new ExifInterface(currentPhotoPath);
         String orientString = exif.getAttribute(ExifInterface.TAG_ORIENTATION);
         int orientation = orientString != null ? Integer.parseInt(orientString) :  ExifInterface.ORIENTATION_NORMAL;
@@ -157,7 +164,11 @@ public class Finding_item extends AppCompatActivity {
 
         Matrix matrix = new Matrix();
         matrix.setRotate(rotationAngle, (float) bitmap.getWidth() / 2, (float) bitmap.getHeight() / 2);
-        bitmap = Bitmap.createBitmap(bitmap, 0, 0, bmOptions.outWidth, bmOptions.outHeight, matrix, true);
+        bitmap = Bitmap.createBitmap(bitmap, 0, 0, bounds.outWidth, bounds.outHeight, matrix, true);
+
+
+
+
 
 //        Bitmap bitmap = BitmapFactory.decodeFile(currentPhotoPath, bmOptions);
 //        bitmap = Bitmap.createBitmap(bitmap, 0, 0, bitmap.getWidth(), bitmap.getHeight(), matrix, true);

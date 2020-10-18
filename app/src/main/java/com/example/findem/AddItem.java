@@ -4,6 +4,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.FileProvider;
 
 import android.Manifest;
+import android.app.Activity;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothSocket;
@@ -118,8 +119,7 @@ public class AddItem extends AppCompatActivity {
                 startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE);
                 galleryAddPic();
                 System.out.println("Added to gallery");
-                Toast.makeText(this, "Saved image",
-                    Toast.LENGTH_LONG).show();
+                onActivityResult(REQUEST_IMAGE_CAPTURE, 0, takePictureIntent);
             }
         }
 //        try {
@@ -127,6 +127,19 @@ public class AddItem extends AppCompatActivity {
 //        } catch (ActivityNotFoundException e) {
 //            // display error state to the user
 //        }
+    }
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == 2) {
+            if (resultCode == Activity.RESULT_OK) {
+                Toast.makeText(this, "Saved image",
+                        Toast.LENGTH_LONG).show();
+            }
+            else if (resultCode == Activity.RESULT_CANCELED) {
+                // something went wrong :-(
+            }
+        }
     }
 
     private File createImageFile() throws IOException {
@@ -227,8 +240,10 @@ public class AddItem extends AppCompatActivity {
             fos = openFileOutput(filename, MODE_APPEND);
             fos.write(item_name.getBytes());
             fos.write("\n".getBytes());
-            Toast.makeText(this, "Added " + item_name + " to items",
-                    Toast.LENGTH_LONG).show();
+            if(filename.equals(MainActivity.FILE_NAME)) {
+                Toast.makeText(this, "Added " + item_name + " to items",
+                        Toast.LENGTH_LONG).show();
+            }
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         } catch (IOException e) {
