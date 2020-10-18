@@ -129,8 +129,6 @@ public class Finding_item extends AppCompatActivity {
         int targetW = imageView.getMaxWidth();
         int targetH = imageView.getMaxHeight();
 
-        System.out.println("targetW: " + targetW + " TargetH: " + targetH);
-
         // Get the dimensions of the bitmap
         BitmapFactory.Options bmOptions = new BitmapFactory.Options();
         bmOptions.inJustDecodeBounds = true;
@@ -281,6 +279,7 @@ public class Finding_item extends AppCompatActivity {
     }
 
     public void start_tracer(BluetoothSocket mmSocket){
+        System.out.println("starting connection with tracer");
         connectedThread = new ConnectedThread(mmSocket);
         connectedThread.start();
         connectedThread.activate_tracer();
@@ -335,6 +334,7 @@ public class Finding_item extends AppCompatActivity {
         public void activate_tracer(){
             try {
                 mmSocket.getOutputStream().write("1".toString().getBytes());
+                System.out.println("activated tracer, i.e. light is on");
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -343,6 +343,7 @@ public class Finding_item extends AppCompatActivity {
         public void kill_tracer(){
             try {
                 mmSocket.getOutputStream().write("0".toString().getBytes());
+                System.out.println("deactivated tracer, i.e. light is og");
             } catch (IOException e) {
                 e.printStackTrace();
             }
