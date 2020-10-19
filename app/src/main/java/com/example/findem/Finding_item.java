@@ -65,7 +65,7 @@ public class Finding_item extends AppCompatActivity {
         System.out.println("The received address is: " + address);
 
         TextView item_name_text = findViewById(R.id.finding_item);
-        item_name_text.setText(item + " " + address);
+        item_name_text.setText("Currently looking for: " + item + "\n" + "With address: " + address);
 
         ImageView imageView = findViewById(R.id.image_view);
         System.out.println("Photopath pre if: " + photopath);

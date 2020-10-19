@@ -1,7 +1,9 @@
 package com.example.findem;
 
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
@@ -36,15 +38,36 @@ public class DeleteItem extends AppCompatActivity {
         addresses_list = read_from_file(MainActivity.FILE_NAME_ADDRESS);
         photopaths_list = read_from_file(MainActivity.FILE_NAME_IMAGE);
 
-        ArrayAdapter adapter = new ArrayAdapter(this, android.R.layout.simple_list_item_1, items_list);
+        ArrayAdapter adapter = new ArrayAdapter(this, R.layout.listview_layout, items_list);
         listView.setAdapter(adapter);
 
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-//                String itemname = listView.getItemAtPosition((int)id).toString();
+            public void onItemClick(AdapterView<?> parent, View view, int position, final long id) {
+                String itemname = listView.getItemAtPosition((int)id).toString();
 //                delete_item(itemname);
-                delete_item((int) id);
+                AlertDialog.Builder alert = new AlertDialog.Builder(DeleteItem.this);
+
+                alert.setTitle("Delete");
+                alert.setMessage("Are you sure you want to delete " + itemname + "?");
+                alert.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        delete_item((int) id);
+                        dialog.dismiss();
+                    }
+                });
+
+                alert.setNegativeButton("No", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                    }
+                });
+                alert.show();
+
+
+
 
             }
         });

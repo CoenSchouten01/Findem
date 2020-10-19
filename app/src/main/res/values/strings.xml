@@ -1,13 +1,13 @@
 <resources>
     <string name="app_name">Find\'em</string>
-    <string name="add_item_button">add an item</string>
-    <string name="find_item_button">find an item</string>
+    <string name="add_item_button">Add an item</string>
+    <string name="find_item_button">Find an item</string>
     <string name="define_itemName_textField">Type here...</string>
     <string name="define_itemImage_textField">Browse...</string>
     <string name="define_name_button">Confirm</string>
     <string name="pick_image_button">Confirm</string>
     <string name="confirm_add_item_button">Add the item to your house</string>
-    <string name="delete_item_button">delete an item</string>
+    <string name="delete_item_button">Delete an item</string>
     <string name="finding_button">Find the item</string>
     <string name="connect_item_button">Connect the item</string>
     <string name="define_MACAdress_textField">Enter the MAC address here...</string>
@@ -16,4 +16,11 @@
     <string name="image_button">Take a picture</string>
     <string name="image_item">Item of the image</string>
     <string name="faq_button">FAQ</string>
+    <string name="faq_page">Frequently Asked Questions</string>
+    <string name="faq_1">How to connect to the tracer?</string>
+    <string name="faq_0">How to add an item?</string>
+    <string name="faq_2">How to find an item?</string>
+    <string name="faq_3">How to delete an item?</string>
+    <string name="faq_4">Why is my tracer not responding?</string>
+    <string name="faq_5">How to change the batteries?</string>
 </resources>

@@ -31,7 +31,7 @@ public class FindItem extends AppCompatActivity {
         final ArrayList<String> addresses_list = read_from_file(MainActivity.FILE_NAME_ADDRESS);
         final ArrayList<String> photopaths = read_from_file(MainActivity.FILE_NAME_IMAGE);
 
-        ArrayAdapter adapter = new ArrayAdapter(this, android.R.layout.simple_list_item_1, items_list);
+        ArrayAdapter adapter = new ArrayAdapter(this, R.layout.listview_layout, items_list);
   //      ItemAdapter adapter = new ItemAdapter(this, items_list, photopaths);
         listView.setAdapter(adapter);
 
