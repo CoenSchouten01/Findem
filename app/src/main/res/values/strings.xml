@@ -9,7 +9,7 @@
     <string name="confirm_add_item_button">Add the item to your house</string>
     <string name="delete_item_button">Delete an item</string>
     <string name="finding_button">Find the item</string>
-    <string name="connect_item_button">Connect the item</string>
+    <string name="connect_item_button">Search the item</string>
     <string name="define_MACAdress_textField">Enter the MAC address here...</string>
     <string name="found_item_button">Found the item</string>
     <string name="discovery_button">Look for nearby bluetooth devices</string>
@@ -23,4 +23,10 @@
     <string name="faq_3">How to delete an item?</string>
     <string name="faq_4">Why is my tracer not responding?</string>
     <string name="faq_5">How to change the batteries?</string>
+    <string name="answer_0">Go to the main page and select the button \'Add an item\'. Then follow the steps on that page.</string>
+    <string name="answer_1">If you follow the steps after pressing the \'Add an item\' button, you will have connected the tracer with your phone.</string>
+    <string name="answer_2">Go to the main page and click on the \'Find an item\' button and select the item you want to find. Then you only have to press the \'Search the item\' button and look for the flickering and beeping tracer.</string>
+    <string name="answer_3">Go to the main page and press the \'Delete an item\' button. Then select the item you want to delete and press \'Yes\' on the confirmation menu.</string>
+    <string name="answer_4">Most likely either the battery is empty or the tracer has been unpaired.</string>
+    <string name="answer_5">Open the lid of the tracer and replace the batteries.</string>
 </resources>

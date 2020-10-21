@@ -211,8 +211,6 @@ public class AddItem extends AppCompatActivity {
             System.out.println("permissions are fine");
         }
         bt_adapter.startDiscovery();
-        IntentFilter filter = new IntentFilter(BluetoothDevice.ACTION_FOUND);
-        registerReceiver(receiver, filter);
         System.out.println("started discovery");
     }
 
