@@ -12,7 +12,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
         android:layout_marginBottom="16dp"
-        android:text="The main menu information"
+        android:text="Welcome to Find'em"
         android:textSize="24sp"
         app:layout_constraintBottom_toTopOf="@+id/addItemButton"
         app:layout_constraintEnd_toEndOf="parent"
