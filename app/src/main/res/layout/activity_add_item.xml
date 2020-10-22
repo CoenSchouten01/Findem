@@ -141,7 +141,7 @@
         android:layout_marginTop="16dp"
         android:layout_marginEnd="16dp"
         android:layout_marginRight="16dp"
-        android:text="1. Look for nearby Bluetooth devices"
+        android:text="1. Please turn on the tracer and then look for nearby Bluetooth devices"
         android:textSize="20sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
