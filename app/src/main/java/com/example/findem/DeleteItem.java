@@ -10,7 +10,6 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
-import android.widget.Toast;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -45,7 +44,6 @@ public class DeleteItem extends AppCompatActivity {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, final long id) {
                 String itemname = listView.getItemAtPosition((int)id).toString();
-//                delete_item(itemname);
                 AlertDialog.Builder alert = new AlertDialog.Builder(DeleteItem.this);
 
                 alert.setTitle("Delete");

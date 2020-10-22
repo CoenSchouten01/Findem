@@ -3,7 +3,6 @@ package com.example.findem;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
 import androidx.core.content.FileProvider;
 
 import android.Manifest;
@@ -11,7 +10,6 @@ import android.app.Activity;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothSocket;
-import android.content.ActivityNotFoundException;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -45,7 +43,6 @@ public class AddItem extends AppCompatActivity {
     BluetoothAdapter bt_adapter;
     private static final String TAG = "MY_APP_DEBUG_TAG";
     private static final UUID MY_UUID = UUID.fromString("2cf6c45d-2106-4004-b91b-17b3939969bd");
-    private BluetoothDevice btdevice;
     private String address;
     private ArrayList<BluetoothDevice> pairedDev = new ArrayList<>();
     private String currentPhotoPath = " ";
@@ -89,12 +86,12 @@ public class AddItem extends AppCompatActivity {
             address = MAC;
             for(BluetoothDevice device : pairedDev){
                 if(address.equals(device.getAddress())){
-                    //btdevice = device;
+                    //initial pairing to the tracker
                     connect_the_item(device);
                     break;
                 }
             }
-            //initial pairing to the tracker
+
 
         } else {
             //Give some error message
@@ -127,11 +124,6 @@ public class AddItem extends AppCompatActivity {
                 onActivityResult(REQUEST_IMAGE_CAPTURE, 0, takePictureIntent);
             }
         }
-//        try {
-//            startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE);
-//        } catch (ActivityNotFoundException e) {
-//            // display error state to the user
-//        }
     }
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -142,7 +134,7 @@ public class AddItem extends AppCompatActivity {
                         Toast.LENGTH_LONG).show();
             }
             else if (resultCode == Activity.RESULT_CANCELED) {
-                // something went wrong :-(
+                // something went wrong
             }
         }
     }
@@ -172,28 +164,8 @@ public class AddItem extends AppCompatActivity {
     }
 
     public void connect_the_item(BluetoothDevice device){
-//        //discover nearby bluetooth devices
-//        if (bt_adapter.isDiscovering()) {
-//            bt_adapter.cancelDiscovery();
-//        }
-//        bt_adapter.startDiscovery();
-        // Make a connection with the found device
-
         ConnectThread connectThread = new ConnectThread(device);
         connectThread.start();
-//        if (pairedDev.size() > 0) {
-//            Toast.makeText(this, "Found item: " + pairedDev.get(0).getAddress(),
-//                    Toast.LENGTH_LONG).show();
-//            for(BluetoothDevice device : pairedDev) {
-//                if(device.getAddress() == address) {
-//                    Finding_item.ConnectThread connectThread = new Finding_item.ConnectThread(device);
-//                    connectThread.start();
-//                }
-//            }
-//        } else {
-//            Toast.makeText(this, "Could not find any items",
-//                    Toast.LENGTH_LONG).show();
-//        }
     }
 
     @RequiresApi(api = Build.VERSION_CODES.M)
@@ -271,27 +243,6 @@ public class AddItem extends AppCompatActivity {
         }
     }
 
-//    public void write_address_to_file(String address){
-//        FileOutputStream fos = null;
-//        try {
-//            fos = openFileOutput(MainActivity.FILE_NAME_ADDRESS, MODE_APPEND);
-//            fos.write(address.getBytes());
-//            fos.write("\n".getBytes());
-//        } catch (FileNotFoundException e) {
-//            e.printStackTrace();
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//        } finally {
-//            if (fos != null) {
-//                try {
-//                    fos.close();
-//                } catch (IOException e) {
-//                    e.printStackTrace();
-//                }
-//            }
-//        }
-//    }
-
     private class ConnectThread extends Thread {
         private BluetoothSocket mmSocket;
         private final BluetoothDevice mmDevice;
@@ -331,10 +282,6 @@ public class AddItem extends AppCompatActivity {
             } catch (InvocationTargetException e) {
                 e.printStackTrace();
             }
-
-            // The connection attempt succeeded. Perform work associated with
-            // the connection in a separate thread.
-            //manage_connected_socket(mmSocket);
         }
 
         // Closes the client socket and causes the thread to finish.

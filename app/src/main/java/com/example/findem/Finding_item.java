@@ -45,19 +45,11 @@ public class Finding_item extends AppCompatActivity {
     private static final UUID MY_UUID = UUID.fromString("2cf6c45d-2106-4004-b91b-17b3939969bd");
     private Set<BluetoothDevice> pairedDevices;
     private ArrayList<BluetoothDevice> pairedDev = new ArrayList<>();
-    private Handler handler; // handler that gets info from Bluetooth service
     private ConnectedThread connectedThread = null;
     BluetoothSocket mmSocket = null;
     private ProgressDialog progress;
     private boolean isBtConnected = false;
 
-    // Defines several constants used when transmitting messages between the
-    // service and the UI.
-    private interface MessageConstants {
-        public static final int MESSAGE_READ = 0;
-        public static final int MESSAGE_WRITE = 1;
-        public static final int MESSAGE_TOAST = 2;
-    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -101,34 +93,8 @@ public class Finding_item extends AppCompatActivity {
         new ConnectedThread().execute();
     }
 
-//    public void find_the_item(View view){
-//        //enable bluetooth if it is not yet enabled on the device
-//        if (!bt_adapter.isEnabled()) {
-//            Intent enableBtIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
-//            startActivityForResult(enableBtIntent, REQUEST_ENABLE_BT);
-//        }
-//        start_discovery();
-//    }
 
     public void connect_the_item(View view) {
-        // Make a connection with the found device
-//        if (bt_adapter.isDiscovering()) {
-//            bt_adapter.cancelDiscovery();
-//        }
-//        bt_adapter.startDiscovery();
-//        if (pairedDev.size() > 0) {
-//            for (BluetoothDevice device : pairedDev) {
-//                if (device.getAddress().equals(address)) {
-////                    ConnectThread connectThread = new ConnectThread(device);
-////                    connectThread.start();
-//                    System.out.println("Thread is gestart");
-//                }
-//                System.out.println("er zit een device in");
-//            }
-//        } else {
-//            Toast.makeText(this, "Could not find any items",
-//                    Toast.LENGTH_LONG).show();
-//        }
         activate_tracer();
     }
 
@@ -176,26 +142,12 @@ public class Finding_item extends AppCompatActivity {
         matrix.setRotate(rotationAngle, (float) bitmap.getWidth() / 2, (float) bitmap.getHeight() / 2);
         bitmap = Bitmap.createBitmap(bitmap, 0, 0, bounds.outWidth, bounds.outHeight, matrix, true);
 
-
-//        Bitmap bitmap = BitmapFactory.decodeFile(currentPhotoPath, bmOptions);
-//        bitmap = Bitmap.createBitmap(bitmap, 0, 0, bitmap.getWidth(), bitmap.getHeight(), matrix, true);
         imageView.setImageBitmap(bitmap);
     }
 
     public void found_the_item(View view) {
         //print 0 to tracer
         kill_tracer();
-//        if (connectedThread != null) {
-//            if (connectedThread.isAlive()) {
-//                connectedThread.kill_tracer();
-//            } else {
-//                Toast.makeText(this, "Tracer is not yet activated!",
-//                        Toast.LENGTH_LONG).show();
-//            }
-//        } else {
-//            Toast.makeText(this, "Tracer is not yet activated!",
-//                    Toast.LENGTH_LONG).show();
-//        }
     }
 
     public void kill_tracer() {
@@ -236,73 +188,8 @@ public class Finding_item extends AppCompatActivity {
         }
     }
 
-//    private class ConnectThread extends Thread {
-//        private BluetoothSocket mmSocket;
-//        private final BluetoothDevice mmDevice;
-//
-//        public ConnectThread(BluetoothDevice device) {
-//            // Use a temporary object that is later assigned to mmSocket
-//            // because mmSocket is final.
-//            mmSocket = null;
-//            mmDevice = device;
-//            try {
-//                // Get a BluetoothSocket to connect with the given BluetoothDevice.
-//                // MY_UUID is the app's UUID string, also used in the server code.
-//                mmSocket = device.createRfcommSocketToServiceRecord(MY_UUID);
-//            } catch (IOException e) {
-//                Log.e(TAG, "Socket's create() method failed", e);
-//            }
-//            System.out.println("socket versie 1:" + mmSocket);
-//        }
-//
-//        public void run() {
-//            // Cancel discovery because it otherwise slows down the connection.
-//            bt_adapter.cancelDiscovery();
-//            if (mmSocket.isConnected()) {
-//                return;
-//            }
-//            try {
-//                Method m = mmDevice.getClass().getMethod("createRfcommSocket",
-//                        new Class[]{int.class});
-//                mmSocket = (BluetoothSocket) m.invoke(mmDevice, Integer.valueOf(1));
-//                mmSocket.connect();
-//            } catch (IOException connectException) {
-//                try {
-//                    mmSocket.close();
-//                    System.out.println("Closing in line 258");
-//                } catch (IOException e) {
-//                    e.printStackTrace();
-//                }
-//            } catch (NoSuchMethodException e) {
-//                e.printStackTrace();
-//            } catch (IllegalAccessException e) {
-//                e.printStackTrace();
-//            } catch (InvocationTargetException e) {
-//                e.printStackTrace();
-//            }
-//
-//            // The connection attempt succeeded. Perform work associated with
-//            // the connection in a separate thread.
-//            start_tracer();
-//        }
-//
-//        // Closes the client socket and causes the thread to finish.
-//        public void cancel() {
-//            try {
-//                if (mmSocket.isConnected()) {
-//                    mmSocket.close();
-//                    System.out.println("closing in line 279");
-//                }
-//                System.out.println("Regel 108, cancelled!");
-//            } catch (IOException e) {
-//                Log.e(TAG, "REgel 177", e);
-//            }
-//        }
-//    }
-
     public void start_tracer() {
         activate_tracer();
-
     }
 
     public void activate_tracer() {
@@ -332,7 +219,6 @@ public class Finding_item extends AppCompatActivity {
             try {
                 if (mmSocket == null || !isBtConnected) {
                     System.out.println("Regel 332");
-//                    bt_adapter = BluetoothAdapter.getDefaultAdapter();//get the mobile bluetooth device
                     BluetoothDevice dispositivo = null;//connects to the device's address and checks if it's available
                     for(BluetoothDevice device: pairedDev){
                         if(device.getAddress().equals(address)){
@@ -379,102 +265,3 @@ public class Finding_item extends AppCompatActivity {
     }
 }
 
-//    public class ConnectedThread extends Thread {
-//        private final BluetoothSocket mmSocket;
-//        private final InputStream mmInStream;
-//        private final OutputStream mmOutStream;
-//        private byte[] mmBuffer; // mmBuffer store for the stream
-//
-//        public ConnectedThread(BluetoothSocket socket) {
-//            mmSocket = socket;
-//            InputStream tmpIn = null;
-//            OutputStream tmpOut = null;
-//
-//            // Get the input and output streams; using temp objects because
-//            // member streams are final.
-//            try {
-//                tmpIn = mmSocket.getInputStream();
-//                tmpOut = mmSocket.getOutputStream();
-//            } catch (IOException e) {
-//                Log.e(TAG, "Error occurred when creating input stream", e);
-//            }
-//
-//            mmInStream = tmpIn;
-//            mmOutStream = tmpOut;
-//        }
-//
-//        public void run() {
-//            mmBuffer = new byte[1024];
-//            int numBytes; // bytes returned from read()
-//
-//            // Keep listening to the InputStream until an exception occurs.
-//            while (true) {
-//                try {
-//                    // Read from the InputStream.
-//                    numBytes = mmInStream.read(mmBuffer);
-//                    // Send the obtained bytes to the UI activity.
-//                    Message readMsg = handler.obtainMessage(
-//                            Finding_item.MessageConstants.MESSAGE_READ, numBytes, -1,
-//                            mmBuffer);
-//                    readMsg.sendToTarget();
-//                } catch (IOException e) {
-//                    Log.d(TAG, "Input stream was disconnected", e);
-//                    break;
-//                }
-//            }
-//        }
-//
-//        // Call this from the main activity to send data to the remote device.
-//        public void activate_tracer(){
-//            try {
-//                if(mmSocket!=null) {
-//                    mmSocket.getOutputStream().write("1".toString().getBytes());
-//                }
-//            } catch (IOException e) {
-//                e.printStackTrace();
-//            }
-//        }
-//
-//        public void kill_tracer(){
-//            try {
-//                if(mmSocket!=null) {
-//                    mmSocket.getOutputStream().write("0".toString().getBytes());
-//                }
-//            } catch (IOException e) {
-//                e.printStackTrace();
-//            }
-//        }
-//
-////        public void write(byte[] bytes) {
-////            try {
-////                mmOutStream.write(bytes);
-////
-////                // Share the sent message with the UI activity.
-////                Message writtenMsg = handler.obtainMessage(
-////                        Finding_item.MessageConstants.MESSAGE_WRITE, -1, -1, mmBuffer);
-////                writtenMsg.sendToTarget();
-////            } catch (IOException e) {
-////                Log.e(TAG, "Error occurred when sending data", e);
-////
-////                // Send a failure message back to the activity.
-////                Message writeErrorMsg =
-////                        handler.obtainMessage(Finding_item.MessageConstants.MESSAGE_TOAST);
-////                Bundle bundle = new Bundle();
-////                bundle.putString("toast",
-////                        "Couldn't send data to the other device");
-////                writeErrorMsg.setData(bundle);
-////                handler.sendMessage(writeErrorMsg);
-////            }
-////        }
-//
-//        // Call this method from the main activity to shut down the connection.
-//        public void cancel() {
-//            try {
-//                mmSocket.close();
-//                System.out.println("Closing in line 385");
-//            } catch (IOException e) {
-//                Log.e(TAG, "Could not close the connect socket", e);
-//            }
-//        }
-//    }
-//}
